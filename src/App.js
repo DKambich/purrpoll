@@ -23,6 +23,9 @@ class App extends Component {
 const theme = createMuiTheme({
   palette: {
     primary: deepPurple
+  },
+  typography: {
+    useNextVariants: true
   }
 });
 

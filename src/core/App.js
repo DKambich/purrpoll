@@ -3,12 +3,11 @@ import React, { Component } from "react";
 import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import { deepPurple } from "@material-ui/core/colors";
-
-import { BrowserRouter as Router, Route, withRouter } from "react-router-dom";
-import * as ROUTES from "../constants/routes";
-
 import "typeface-roboto";
-
+// React Router Imports
+import { BrowserRouter as Router, Route } from "react-router-dom";
+import * as ROUTES from "../constants/routes";
+// Screen Imports
 import Authentication from "../screens/Auth";
 import Main from "../screens/Main";
 
@@ -21,7 +20,7 @@ class App extends Component {
         <Router>
           <CssBaseline />
           <Route path={ROUTES.LANDING} exact component={Authentication} />
-          <Route path={ROUTES.HOME} component={Main} />
+          <Route path={ROUTES.MAIN} component={Main} />
         </Router>
       </MuiThemeProvider>
     );

@@ -7,7 +7,7 @@ import "firebase/auth";
 
 import fire from "../constants/config";
 import PurrPollIcon from "../components/PurrPollIcon";
-import * as ROUTES from "../constants/routes";
+import { MAIN } from "../constants/routes";
 
 const styles = theme => ({
   root: {
@@ -77,25 +77,20 @@ class Authentication extends Component {
     );
   }
 
-  signInWithGoogle() {
+  async signInWithGoogle() {
     let history = this.props.history;
     let provider = new firebase.auth.GoogleAuthProvider();
-    fire
-      .auth()
-      .signInWithPopup(provider)
-      .then(function(result) {
-        // This gives you a Google Access Token. You can use it to access the Google API.
-        let token = result.credential.accessToken;
-        // The signed-in user info.
-        let user = result.user;
-        console.log(user.email);
-        // ...
-        history.push(ROUTES.HOME);
-      })
-      .catch(function(error) {
-        var errorCode = error.code;
-        var errorMessage = error.message;
-      });
+    try {
+      let result = await fire.auth().signInWithPopup(provider);
+      //let token = result.credential.accessToken;
+      let user = result.user;
+      console.log(user.email);
+      history.push(MAIN);
+    } catch (error) {
+      let errorCode = error.code,
+        errorMessage = error.message;
+      console.error(errorCode, errorMessage);
+    }
   }
 }
 

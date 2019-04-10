@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { withStyles } from "@material-ui/core/styles";
 import { Grid, Paper, Typography, Button } from "@material-ui/core";
+
 import firebase from "firebase/app";
 import "firebase/auth";
 

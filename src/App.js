@@ -1,9 +1,10 @@
 import React, { Component } from "react";
+// Material UI Imports
 import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles";
-import "typeface-roboto";
-
 import CssBaseline from "@material-ui/core/CssBaseline";
-import deepPurple from "@material-ui/core/colors/deepPurple";
+import { deepPurple } from "@material-ui/core/colors";
+
+import "typeface-roboto";
 
 import Authentification from "./Auth";
 

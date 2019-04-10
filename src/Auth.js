@@ -2,21 +2,23 @@ import React, { Component } from "react";
 import { withStyles } from "@material-ui/core/styles";
 import { Grid, Paper, Typography, Button } from "@material-ui/core";
 
-const styles = {
+const styles = theme => ({
   root: {
     height: "100vh",
     backgroundSize: "cover",
     backgroundImage: `url(https://wallpaperplay.com/walls/full/2/0/c/72433.jpg)`
   },
   title: {
-    marginBottom: 20
+    margin: theme.spacing.unit * 2
+  },
+  button: {
+    margin: theme.spacing.unit
   },
   paper: {
-    width: "20%",
     padding: 25,
     alignContent: "center"
   }
-};
+});
 
 class Authentication extends Component {
   render() {
@@ -29,14 +31,6 @@ class Authentication extends Component {
         alignItems="center"
         className={classes.root}
       >
-        <Typography
-          component="h1"
-          variant="h3"
-          color="primary"
-          className={classes.title}
-        >
-          Welcome to purrpoll
-        </Typography>
         <Paper className={classes.paper}>
           <Grid
             container
@@ -46,6 +40,14 @@ class Authentication extends Component {
             spacing={16}
           >
             <Typography
+              component="h1"
+              variant="h3"
+              color="primary"
+              className={classes.title}
+            >
+              Welcome to purrpoll
+            </Typography>
+            <Typography
               variant="h5"
               component="h3"
               align="center"
@@ -53,7 +55,9 @@ class Authentication extends Component {
             >
               Sign In
             </Typography>
-            <Button variant="contained">Sign in with Google</Button>
+            <Button className={classes.button} variant="contained">
+              Sign in with Google
+            </Button>
           </Grid>
         </Paper>
       </Grid>

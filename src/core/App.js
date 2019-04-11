@@ -1,14 +1,15 @@
 import React, { Component } from "react";
 // Material UI Imports
 import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles";
+import { deepPurple, red } from "@material-ui/core/colors";
 import CssBaseline from "@material-ui/core/CssBaseline";
-import { deepPurple } from "@material-ui/core/colors";
 import "typeface-roboto";
 // React Router Imports
 import { BrowserRouter as Router, Route } from "react-router-dom";
 import * as ROUTES from "../constants/routes";
-// Screen Imports
-import Authentication from "../screens/Auth";
+// Local Imports
+import Authentication from "../screens/Authentication";
+import Landing from "../screens/Landing";
 import Main from "../screens/Main";
 
 import "./App.css";
@@ -19,7 +20,8 @@ class App extends Component {
       <MuiThemeProvider theme={theme}>
         <Router>
           <CssBaseline />
-          <Route path={ROUTES.LANDING} exact component={Authentication} />
+          <Route path={ROUTES.LANDING} exact component={Landing} />
+          <Route path={ROUTES.SIGN_IN} component={Authentication} />
           <Route path={ROUTES.MAIN} component={Main} />
         </Router>
       </MuiThemeProvider>
@@ -29,7 +31,8 @@ class App extends Component {
 
 const theme = createMuiTheme({
   palette: {
-    primary: deepPurple
+    primary: deepPurple,
+    secondary: red
   },
   typography: {
     useNextVariants: true

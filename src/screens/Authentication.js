@@ -1,13 +1,15 @@
 import React, { Component } from "react";
+// Material UI Imports
 import { withStyles } from "@material-ui/core/styles";
 import { Grid, Paper, Typography, Button } from "@material-ui/core";
-
+// Firebase Imports
 import firebase from "firebase/app";
 import "firebase/auth";
-
 import fire from "../constants/config";
-import PurrPollIcon from "../components/PurrPollIcon";
+// React Router Imports
 import { MAIN } from "../constants/routes";
+// Local Imports
+import PurrPollIcon from "../components/PurrPollIcon";
 
 const styles = theme => ({
   root: {
@@ -78,14 +80,18 @@ class Authentication extends Component {
   }
 
   async signInWithGoogle() {
-    let history = this.props.history;
     let provider = new firebase.auth.GoogleAuthProvider();
     try {
-      let result = await fire.auth().signInWithPopup(provider);
-      //let token = result.credential.accessToken;
-      let user = result.user;
-      console.log(user.email);
-      history.push(MAIN);
+      let result,
+        { credential } = await fire.auth().signInWithPopup(provider);
+      this.props.history.push(MAIN);
+      // let googleCredential = firebase.auth.GoogleAuthProvider.credential(
+      //   credential.idToken,
+      //   credential.accessToken
+      // );
+      //await fire.auth().signInAndRetrieveDataWithCredential(googleCredential);
+      //let user = result.user;
+      //console.log(user.email);
     } catch (error) {
       let errorCode = error.code,
         errorMessage = error.message;

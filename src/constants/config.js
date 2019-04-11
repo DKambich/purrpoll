@@ -8,6 +8,6 @@ var config = {
   messagingSenderId: "502676779248"
 };
 var fire = firebase.initializeApp(config);
-fire.auth().setPersistence(firebase.auth.Auth.Persistence.SESSION);
+fire.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL);
 
 export default fire;

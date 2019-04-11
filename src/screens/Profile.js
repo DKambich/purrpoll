@@ -23,10 +23,9 @@ class Profile extends Component {
   constructor(props) {
     super(props);
     this.signout = this.signout.bind(this);
-    if (!fire.auth().currentUser) {
+    if (!props.location.state) {
       this.props.history.push(ROUTES.LANDING);
     }
-    console.log(props.location);
   }
   render() {
     let { classes, history } = this.props;

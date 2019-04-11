@@ -2,15 +2,14 @@ import React, { Component } from "react";
 // Material UI Imports
 import { withStyles } from "@material-ui/core/styles";
 import { Grid, Paper, Typography, Button } from "@material-ui/core";
-import classNames from "classnames";
 // Firebase Imports
 import firebase from "firebase/app";
 import "firebase/auth";
 import fire from "../constants/config";
 // React Router Imports
-import { MAIN } from "../constants/routes";
+import { LANDING } from "../constants/routes";
 // Local Imports
-import PurrPollIcon from "../components/PurrPollIcon";
+import CatIcon from "../components/CatIcon";
 
 const styles = theme => ({
   root: {
@@ -22,6 +21,9 @@ const styles = theme => ({
     padding: theme.spacing.unit * 1.5,
     margin: theme.spacing.unit,
     alignContent: "center"
+  },
+  logo: {
+    fontSize: 300
   },
   title: {
     margin: theme.spacing.unit * 2
@@ -61,7 +63,7 @@ class Authentication extends Component {
             alignItems="center"
             spacing={16}
           >
-            <PurrPollIcon />
+            <CatIcon color="primary" className={classes.logo} />
             <Typography
               component="h1"
               variant="h3"
@@ -97,16 +99,8 @@ class Authentication extends Component {
   async signInWithGoogle() {
     let provider = new firebase.auth.GoogleAuthProvider();
     try {
-      let result,
-        { credential } = await fire.auth().signInWithPopup(provider);
-      this.props.history.push(MAIN);
-      // let googleCredential = firebase.auth.GoogleAuthProvider.credential(
-      //   credential.idToken,
-      //   credential.accessToken
-      // );
-      //await fire.auth().signInAndRetrieveDataWithCredential(googleCredential);
-      //let user = result.user;
-      //console.log(user.email);
+      await fire.auth().signInWithPopup(provider);
+      this.props.history.push(LANDING);
     } catch (error) {
       let errorCode = error.code,
         errorMessage = error.message;

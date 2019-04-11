@@ -1,5 +1,4 @@
 import React, { Component, Fragment } from "react";
-import fire from "../constants/config";
 import * as ROUTES from "../constants/routes";
 import { withRouter } from "react-router-dom";
 import {
@@ -19,18 +18,23 @@ const styles = {
     flexGrow: 1
   },
   avatar: {
-    width: 32,
-    height: 32
+    // width: 32,
+    // height: 32
   }
 };
 
 class Main extends Component {
   constructor(props) {
     super(props);
-    if (!fire.auth().currentUser) {
+    // If the user is being routed from a different page
+    if (!props.location.state) {
       this.props.history.push(ROUTES.LANDING);
     }
+    this.state = {
+      avatarURL: props.location.state.user.photoURL
+    };
   }
+
   render() {
     const { classes } = this.props;
 
@@ -43,10 +47,13 @@ class Main extends Component {
             </Typography>
             <IconButton
               onClick={() => {
-                this.props.history.push(ROUTES.PROFILE);
+                this.props.history.push({
+                  pathname: ROUTES.PROFILE,
+                  state: { test: "TEST" }
+                });
               }}
             >
-              <Avatar className={classes.avatar}>H</Avatar>
+              <Avatar className={classes.avatar} src={this.state.avatarURL} />
             </IconButton>
           </Toolbar>
         </AppBar>

@@ -1,6 +1,7 @@
 import React, { Component, Fragment } from "react";
 import fire from "../constants/config";
 import * as ROUTES from "../constants/routes";
+import { withRouter } from "react-router-dom";
 import {
   AppBar,
   Toolbar,
@@ -54,4 +55,4 @@ class Main extends Component {
   }
 }
 
-export default withStyles(styles)(Main);
+export default withStyles(styles)(withRouter(Main));

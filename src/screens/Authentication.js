@@ -2,6 +2,7 @@ import React, { Component } from "react";
 // Material UI Imports
 import { withStyles } from "@material-ui/core/styles";
 import { Grid, Paper, Typography, Button } from "@material-ui/core";
+import classNames from "classnames";
 // Firebase Imports
 import firebase from "firebase/app";
 import "firebase/auth";
@@ -17,16 +18,22 @@ const styles = theme => ({
     backgroundSize: "cover",
     backgroundImage: `url(https://farm6.static.flickr.com/5187/5635598426_caff56e4a8_b.jpg)`
   },
+  paper: {
+    padding: theme.spacing.unit * 1.5,
+    margin: theme.spacing.unit,
+    alignContent: "center"
+  },
   title: {
     margin: theme.spacing.unit * 2
   },
-  button: {
-    margin: theme.spacing.unit
+  googleButton: {
+    margin: theme.spacing.unit,
+    background: "#FFF",
+    color: "black",
+    "&:hover": { background: "#EEE" }
   },
-  paper: {
-    padding: 15,
-    margin: 10,
-    alignContent: "center"
+  googleIcon: {
+    marginRight: theme.spacing.unit
   }
 });
 
@@ -37,6 +44,7 @@ class Authentication extends Component {
   }
   render() {
     const { classes } = this.props;
+
     return (
       <Grid
         container
@@ -53,7 +61,7 @@ class Authentication extends Component {
             alignItems="center"
             spacing={16}
           >
-            <PurrPollIcon width="100" height="100" />
+            <PurrPollIcon />
             <Typography
               component="h1"
               variant="h3"
@@ -67,10 +75,17 @@ class Authentication extends Component {
               Sign in and get started
             </Typography>
             <Button
-              className={classes.button}
+              className={classes.googleButton}
               variant="contained"
               onClick={this.signInWithGoogle}
             >
+              <img
+                className={classes.googleIcon}
+                src="https://img.icons8.com/color/48/000000/google-logo.png"
+                alt="Google Logo"
+                width={20}
+                height={20}
+              />
               Sign in with Google
             </Button>
           </Grid>

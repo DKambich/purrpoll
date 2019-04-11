@@ -13,6 +13,7 @@ import Landing from "../screens/Landing";
 import Main from "../screens/Main";
 
 import "./App.css";
+import Profile from "../screens/Profile";
 
 class App extends Component {
   render() {
@@ -23,6 +24,8 @@ class App extends Component {
           <Route path={ROUTES.LANDING} exact component={Landing} />
           <Route path={ROUTES.SIGN_IN} component={Authentication} />
           <Route path={ROUTES.MAIN} component={Main} />
+          <Route path={ROUTES.PROFILE} component={Profile} />
+
         </Router>
       </MuiThemeProvider>
     );

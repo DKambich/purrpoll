@@ -11,8 +11,6 @@ import * as ROUTES from "../constants/routes";
 import Authentication from "../screens/Authentication";
 import Landing from "../screens/Landing";
 import Main from "../screens/Main";
-
-import "./App.css";
 import Profile from "../screens/Profile";
 
 class App extends Component {
@@ -31,6 +29,7 @@ class App extends Component {
   }
 }
 
+// Create the Global App Theme
 const theme = createMuiTheme({
   palette: {
     primary: deepPurple,

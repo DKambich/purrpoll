@@ -13,25 +13,25 @@ import CatIcon from "../components/CatIcon";
 
 const styles = theme => ({
   root: {
-    height: "100vh",
+    backgroundImage: `url(https://farm6.static.flickr.com/5187/5635598426_caff56e4a8_b.jpg)`,
     backgroundSize: "cover",
-    backgroundImage: `url(https://farm6.static.flickr.com/5187/5635598426_caff56e4a8_b.jpg)`
+    height: "100vh"
   },
   paper: {
-    padding: theme.spacing.unit * 1.5,
+    alignContent: "center",
     margin: theme.spacing.unit,
-    alignContent: "center"
+    padding: theme.spacing.unit * 1.5
   },
-  logo: {
+  catLogo: {
     fontSize: 300
   },
   title: {
     margin: theme.spacing.unit * 2
   },
   googleButton: {
-    margin: theme.spacing.unit,
     background: "#FFF",
     color: "black",
+    margin: theme.spacing.unit,
     "&:hover": { background: "#EEE" }
   },
   googleIcon: {
@@ -63,7 +63,7 @@ class Authentication extends Component {
             alignItems="center"
             spacing={16}
           >
-            <CatIcon color="primary" className={classes.logo} />
+            <CatIcon color="primary" className={classes.catLogo} />
             <Typography
               component="h1"
               variant="h3"
@@ -97,11 +97,15 @@ class Authentication extends Component {
   }
 
   async signInWithGoogle() {
+    // Create a Google Authentication Provider
     let provider = new firebase.auth.GoogleAuthProvider();
     try {
+      // Display a Google sign in popup
       await fire.auth().signInWithPopup(provider);
+      // Navigate to the landing page once signed in
       this.props.history.push(LANDING);
     } catch (error) {
+      // Log errors that come from the popup
       let errorCode = error.code,
         errorMessage = error.message;
       console.error(errorCode, errorMessage);

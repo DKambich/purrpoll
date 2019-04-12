@@ -19,8 +19,8 @@ class App extends Component {
   render() {
     return (
       <MuiThemeProvider theme={theme}>
+        <CssBaseline />
         <Router>
-          <CssBaseline />
           <Route path={ROUTES.LANDING} exact component={Landing} />
           <Route path={ROUTES.SIGN_IN} component={Authentication} />
           <Route path={ROUTES.MAIN} component={Main} />

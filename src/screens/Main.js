@@ -17,10 +17,7 @@ const styles = {
   grow: {
     flexGrow: 1
   },
-  avatar: {
-    // width: 32,
-    // height: 32
-  }
+  avatar: {}
 };
 
 class Main extends Component {

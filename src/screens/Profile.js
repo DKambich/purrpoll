@@ -16,7 +16,6 @@ import { ArrowBackRounded } from "@material-ui/icons";
 // Firebase Imports
 import fire from "../constants/config";
 // React Router Imports
-import { withRouter } from "react-router-dom";
 import { LANDING } from "../constants/routes";
 
 const styles = theme => {
@@ -94,4 +93,4 @@ class Profile extends Component {
   }
 }
 
-export default withStyles(styles, { withTheme: true })(withRouter(Profile));
+export default withStyles(styles, { withTheme: true })(Profile);

@@ -3,7 +3,6 @@ import React, { Component, Fragment } from "react";
 import fire from "../constants/config";
 // React Router Imports
 import * as ROUTES from "../constants/routes";
-import { withRouter } from "react-router-dom";
 
 class Landing extends Component {
   constructor(props) {
@@ -39,4 +38,4 @@ class Landing extends Component {
   }
 }
 
-export default withRouter(Landing);
+export default Landing;

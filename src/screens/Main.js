@@ -11,7 +11,6 @@ import {
 } from "@material-ui/core";
 import { CloudUpload } from "@material-ui/icons";
 // React Router Imports
-import { withRouter } from "react-router-dom";
 import { LANDING, PROFILE } from "../constants/routes";
 
 const styles = {
@@ -19,8 +18,8 @@ const styles = {
     flexGrow: 1
   },
   avatar: {
-    height: 26,
-    width: 26
+    height: 24,
+    width: 24
   }
 };
 
@@ -76,4 +75,4 @@ class Main extends Component {
   }
 }
 
-export default withStyles(styles)(withRouter(Main));
+export default withStyles(styles)(Main);

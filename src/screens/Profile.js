@@ -8,16 +8,29 @@ import {
   AppBar,
   IconButton,
   Toolbar,
-  Typography
+  Typography,
+  Avatar,
+  Grid
 } from "@material-ui/core";
 import { ArrowBackRounded } from "@material-ui/icons";
 
-const styles = theme => ({
-  grow: {
-    flexGrow: 1,
-    marginLeft: theme.spacing.unit
-  }
-});
+const styles = theme => {
+  console.log(theme);
+  return {
+    grow: {
+      flexGrow: 1,
+      marginLeft: theme.spacing.unit
+    },
+    bigAvatar: {
+      margin: theme.spacing.unit * 2,
+      width: 100,
+      height: 100,
+      borderColor: theme.palette.primary[500],
+      borderStyle: "solid",
+      borderWidth: 3
+    }
+  };
+};
 
 class Profile extends Component {
   constructor(props) {
@@ -26,9 +39,10 @@ class Profile extends Component {
     if (!props.location.state) {
       this.props.history.push(ROUTES.LANDING);
     }
+    console.log(props.location.state);
   }
   render() {
-    let { classes, history } = this.props;
+    let { classes, history, location } = this.props;
     return (
       <Fragment>
         <AppBar position="static" color="primary">
@@ -44,6 +58,13 @@ class Profile extends Component {
             </Button>
           </Toolbar>
         </AppBar>
+        <Grid container direction="column" justify="center" alignItems="center">
+          <Avatar
+            src={location.state.user.photoURL}
+            className={classes.bigAvatar}
+          />
+          <Typography>{location.state.user.name}</Typography>
+        </Grid>
       </Fragment>
     );
   }

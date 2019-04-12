@@ -31,6 +31,7 @@ class Main extends Component {
       this.props.history.push(ROUTES.LANDING);
     }
     this.state = {
+      user: props.location.state.user,
       avatarURL: props.location.state.user.photoURL
     };
   }
@@ -49,7 +50,7 @@ class Main extends Component {
               onClick={() => {
                 this.props.history.push({
                   pathname: ROUTES.PROFILE,
-                  state: { test: "TEST" }
+                  state: { user: this.state.user }
                 });
               }}
             >

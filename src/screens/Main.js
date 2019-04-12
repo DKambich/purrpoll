@@ -1,6 +1,5 @@
 import React, { Component, Fragment } from "react";
-import * as ROUTES from "../constants/routes";
-import { withRouter } from "react-router-dom";
+// Material UI Imports
 import {
   AppBar,
   Toolbar,
@@ -11,36 +10,39 @@ import {
   Tooltip
 } from "@material-ui/core";
 import { CloudUpload } from "@material-ui/icons";
+// React Router Imports
+import { withRouter } from "react-router-dom";
+import { LANDING, PROFILE } from "../constants/routes";
 
 const styles = {
-  root: {
-    flexGrow: 1
-  },
   grow: {
     flexGrow: 1
   },
   avatar: {
-    width: 26,
-    height: 26
+    height: 26,
+    width: 26
   }
 };
 
 class Main extends Component {
   constructor(props) {
     super(props);
-    // If the user is being routed from a different page
+    this.navigateToProfile = this.navigateToProfile.bind(this);
+    
+    // If the user does not come from another page...
     if (!props.location.state) {
-      this.props.history.push(ROUTES.LANDING);
+      // Navigate to the landing page
+      this.props.history.push(LANDING);
     }
+
     this.state = {
-      user: props.location.state.user,
-      avatarURL: props.location.state.user.photoURL
+      user: props.location.state.user
     };
   }
 
   render() {
     const { classes } = this.props;
-
+    const { user } = this.state;
     return (
       <Fragment>
         <AppBar position="static" color="primary">
@@ -48,28 +50,29 @@ class Main extends Component {
             <Typography variant="h6" color="inherit" className={classes.grow}>
               purrpoll
             </Typography>
+
             <Tooltip title="Upload Cat" aria-label="Upload Cat">
               <IconButton color="inherit">
                 <CloudUpload />
               </IconButton>
             </Tooltip>
+
             <Tooltip title="Profile" aria-label="Profile">
-              <IconButton
-                color="inherit"
-                onClick={() => {
-                  this.props.history.push({
-                    pathname: ROUTES.PROFILE,
-                    state: { user: this.state.user }
-                  });
-                }}
-              >
-                <Avatar className={classes.avatar} src={this.state.avatarURL} />
+              <IconButton color="inherit" onClick={this.navigateToProfile}>
+                <Avatar className={classes.avatar} src={user.photoURL} />
               </IconButton>
             </Tooltip>
           </Toolbar>
         </AppBar>
       </Fragment>
     );
+  }
+
+  navigateToProfile() {
+    this.props.history.push({
+      pathname: PROFILE,
+      state: { user: this.state.user }
+    });
   }
 }
 

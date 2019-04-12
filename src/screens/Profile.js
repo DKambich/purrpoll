@@ -48,8 +48,8 @@ class Profile extends Component {
     console.log(props.location.state);
   }
   render() {
-    let { classes, history, location, theme } = this.props;
-    let { user } = location.state;
+    const { classes, history, location, theme } = this.props;
+    const { user } = location.state;
     return (
       <Fragment>
         <AppBar position="static" color="primary">

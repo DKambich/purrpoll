@@ -7,8 +7,10 @@ import {
   Typography,
   Avatar,
   IconButton,
-  withStyles
+  withStyles,
+  Tooltip
 } from "@material-ui/core";
+import { CloudUpload } from "@material-ui/icons";
 
 const styles = {
   root: {
@@ -17,7 +19,10 @@ const styles = {
   grow: {
     flexGrow: 1
   },
-  avatar: {}
+  avatar: {
+    width: 26,
+    height: 26
+  }
 };
 
 class Main extends Component {
@@ -43,16 +48,24 @@ class Main extends Component {
             <Typography variant="h6" color="inherit" className={classes.grow}>
               purrpoll
             </Typography>
-            <IconButton
-              onClick={() => {
-                this.props.history.push({
-                  pathname: ROUTES.PROFILE,
-                  state: { user: this.state.user }
-                });
-              }}
-            >
-              <Avatar className={classes.avatar} src={this.state.avatarURL} />
-            </IconButton>
+            <Tooltip title="Upload Cat" aria-label="Upload Cat">
+              <IconButton color="inherit">
+                <CloudUpload />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title="Profile" aria-label="Profile">
+              <IconButton
+                color="inherit"
+                onClick={() => {
+                  this.props.history.push({
+                    pathname: ROUTES.PROFILE,
+                    state: { user: this.state.user }
+                  });
+                }}
+              >
+                <Avatar className={classes.avatar} src={this.state.avatarURL} />
+              </IconButton>
+            </Tooltip>
           </Toolbar>
         </AppBar>
       </Fragment>

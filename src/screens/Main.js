@@ -18,8 +18,8 @@ const styles = {
     flexGrow: 1
   },
   avatar: {
-    height: 26,
-    width: 26
+    height: 24,
+    width: 24
   }
 };
 

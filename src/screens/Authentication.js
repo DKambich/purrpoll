@@ -44,6 +44,7 @@ class Authentication extends Component {
     super(props);
     this.signInWithGoogle = this.signInWithGoogle.bind(this);
   }
+
   render() {
     const { classes } = this.props;
 
@@ -55,6 +56,7 @@ class Authentication extends Component {
         alignItems="center"
         className={classes.root}
       >
+        {/* TODO: This code should be refactored in desktop rendered code */}
         <Paper className={classes.paper}>
           <Grid
             container
@@ -92,6 +94,7 @@ class Authentication extends Component {
             </Button>
           </Grid>
         </Paper>
+        {/* TODO: Add code to render mobile view */}
       </Grid>
     );
   }

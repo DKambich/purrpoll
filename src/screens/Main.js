@@ -8,27 +8,37 @@ import {
   Toolbar,
   Tooltip,
   Typography,
-  withStyles
+  withStyles,
+  Grid
 } from "@material-ui/core";
 // React Router Imports
 import { LANDING, PROFILE } from "../constants/routes";
 
 import CatIcon from "../components/CatIcon";
+import CatLoading from "../components/CatLoading";
 
-const styles = theme => ({
-  grow: {
-    flexGrow: 1
-  },
-  logo: {
-    marginRight: theme.spacing.unit,
-    [theme.breakpoints.down("sm")]: {
-      fontSize: 32
+const styles = theme => {
+  console.log(theme);
+  return {
+    root: {
+      display: "flex",
+      flexDirection: "column",
+      height: "100vh"
     },
-    [theme.breakpoints.up("sm")]: {
-      fontSize: 40
+    grow: {
+      flexGrow: 1
+    },
+    logo: {
+      marginRight: theme.spacing.unit,
+      [theme.breakpoints.down("sm")]: {
+        fontSize: 32
+      },
+      [theme.breakpoints.up("sm")]: {
+        fontSize: 40
+      }
     }
-  }
-});
+  };
+};
 
 class Main extends Component {
   constructor(props) {
@@ -53,8 +63,8 @@ class Main extends Component {
     const { classes } = this.props;
     const { user } = this.state;
     return (
-      <Fragment>
-        <AppBar position="static" color="primary">
+      <Fragment className={classes.root}>
+        <AppBar position="static" color="primary" style={{ flex: 0 }}>
           <Toolbar>
             <CatIcon className={classes.logo} />
             <Typography variant="h6" color="inherit" className={classes.grow}>
@@ -76,6 +86,16 @@ class Main extends Component {
             <Tab label="TRENDING" />
           </Tabs>
         </AppBar>
+        <Grid
+          container
+          direction="column"
+          justify="center"
+          alignItems="center"
+          style={{ flex: 1 }}
+        >
+          {this.state.selectedTab === 0 && <CatLoading />}
+          {this.state.selectedTab === 1 && <CatLoading />}
+        </Grid>
       </Fragment>
     );
   }

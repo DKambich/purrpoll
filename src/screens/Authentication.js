@@ -36,12 +36,19 @@ const styles = theme => ({
   },
   googleIcon: {
     marginRight: theme.spacing.unit
+  },
+  failedSignIn: {
+    color: "red"
   }
 });
 
 class Authentication extends Component {
   constructor(props) {
     super(props);
+
+    this.state = {
+      failedSignIn: false
+    };
     this.signInWithGoogle = this.signInWithGoogle.bind(this);
   }
 
@@ -92,6 +99,11 @@ class Authentication extends Component {
               />
               Sign in with Google
             </Button>
+            {this.state.failedSignIn && (
+              <Typography className={classes.failedSignIn}>
+                Failed to sign in. Please try again.
+              </Typography>
+            )}
           </Grid>
         </Paper>
         {/* TODO: Add code to render mobile view */}
@@ -112,6 +124,7 @@ class Authentication extends Component {
       let errorCode = error.code,
         errorMessage = error.message;
       console.error(errorCode, errorMessage);
+      this.setState({ failedSignIn: true });
     }
   }
 }

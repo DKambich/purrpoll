@@ -17,13 +17,16 @@ import { LANDING, PROFILE } from "../constants/routes";
 import CatIcon from "../components/CatIcon";
 import CatLoading from "../components/CatLoading";
 
+import SwipeableViews from "react-swipeable-views";
+
 const styles = theme => {
   console.log(theme);
   return {
     root: {
       display: "flex",
       flexDirection: "column",
-      height: "100vh"
+      height: "100vh",
+      width: "100vw"
     },
     grow: {
       flexGrow: 1
@@ -57,13 +60,14 @@ class Main extends Component {
 
     this.navigateToProfile = this.navigateToProfile.bind(this);
     this.setTab = this.setTab.bind(this);
+    this.handleChangeIndex = this.handleChangeIndex.bind(this);
   }
 
   render() {
     const { classes } = this.props;
     const { user } = this.state;
     return (
-      <Fragment className={classes.root}>
+      <div className={classes.root}>
         <AppBar position="static" color="primary" style={{ flex: 0 }}>
           <Toolbar>
             <CatIcon className={classes.logo} />
@@ -88,15 +92,15 @@ class Main extends Component {
         </AppBar>
         <Grid
           container
-          direction="column"
           justify="center"
           alignItems="center"
           style={{ flex: 1 }}
         >
-          {this.state.selectedTab === 0 && <CatLoading />}
-          {this.state.selectedTab === 1 && <CatLoading />}
+          <CatLoading />
+
+          <CatLoading />
         </Grid>
-      </Fragment>
+      </div>
     );
   }
 
@@ -108,7 +112,11 @@ class Main extends Component {
   }
 
   setTab(event, value) {
-    this.setState({ selectedTab: value });
+    this.handleChangeIndex(value);
+  }
+
+  handleChangeIndex(index) {
+    this.setState({ selectedTab: index });
   }
 }
 

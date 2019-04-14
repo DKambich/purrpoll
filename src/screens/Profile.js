@@ -19,8 +19,17 @@ import {
   DialogContent,
   DialogContentText,
   DialogActions,
-  Button
+  Button,
+  CardHeader,
+  Tab,
+  Tabs,
+  BottomNavigation,
+  BottomNavigationAction
 } from "@material-ui/core";
+import RestoreIcon from "@material-ui/icons/Restore";
+import FavoriteIcon from "@material-ui/icons/Favorite";
+import LocationOnIcon from "@material-ui/icons/LocationOn";
+
 import {
   ArrowBackRounded,
   ExitToApp,
@@ -44,7 +53,7 @@ const styles = theme => {
       marginRight: theme.spacing.unit
     },
     deleteIcon: {
-      color: "red"
+      color: "darkred"
     }
   };
 };
@@ -82,7 +91,7 @@ class Profile extends Component {
     const { user } = location.state;
     const { menuAnchor } = this.state;
     const open = Boolean(menuAnchor);
-
+    const value = 1;
     return (
       <Fragment>
         <AppBar color="primary" position="fixed">
@@ -97,9 +106,15 @@ class Profile extends Component {
             <IconButton color="inherit" onClick={this.openMenu}>
               <MoreVert />
             </IconButton>
-            {this.renderMenu(menuAnchor, open)}
+            {this.renderMenu(menuAnchor, open, classes)}
             {this.renderDialog()}
           </Toolbar>
+          {/* Possible Navigation scheme */}
+          {/* <Tabs value={value} onChange={null} variant="fullWidth">
+            <Tab label="Your Votes" />
+            <Tab label="Your Favorites" />
+            <Tab label="Your Cats" />
+          </Tabs> */}
         </AppBar>
 
         <div style={{ paddingTop: 64 }} />
@@ -116,10 +131,30 @@ class Profile extends Component {
                 margin: theme.spacing.unit * 3
               }}
             >
-              <CardContent>{index}</CardContent>
+              <CardHeader title={"CAT NAME"} />
+              <CardContent>
+                <img
+                  src="https://cdn2.thecatapi.com/images/eee.jpg"
+                  style={{
+                    maxWidth: "100%",
+                    maxHeight: "100%",
+                    verticalAlign: "middle"
+                  }}
+                />
+              </CardContent>
             </Card>
           ))}
         </Grid>
+        <div style={{ paddingBottom: 64 }} />
+
+        {/* Possible Navigation Scheme */}
+        {/* <BottomNavigation
+          style={{ width: "100%", position: "fixed", bottom: 0 }}
+        >
+          <BottomNavigationAction label="Recents" icon={<RestoreIcon />} />
+          <BottomNavigationAction label="Favorites" icon={<FavoriteIcon />} />
+          <BottomNavigationAction label="Nearby" icon={<LocationOnIcon />} />
+        </BottomNavigation> */}
       </Fragment>
     );
   }
@@ -177,7 +212,7 @@ class Profile extends Component {
     this.setState({ dialogOpen: false });
   }
 
-  renderMenu(element, open) {
+  renderMenu(element, open, classes) {
     return (
       <Menu
         id="long-menu"
@@ -194,6 +229,8 @@ class Profile extends Component {
         open={open}
         onClose={this.closeMenu}
       >
+        {/* Placeholder MenuItem so first real MenuItem is not highlighted */}
+        <MenuItem key="placeholder" style={{ display: "none" }} />
         {/* MenuItem to sign the user out */}
         <MenuItem onClick={this.signOut} selected={false}>
           <ListItemIcon>
@@ -204,12 +241,9 @@ class Profile extends Component {
         {/* MenuItem to delete the user's account */}
         <MenuItem onClick={this.openDialog}>
           <ListItemIcon>
-            <DeleteForever color="secondary" />
+            <DeleteForever className={classes.deleteIcon} />
           </ListItemIcon>
-          <ListItemText
-            primary="Delete Account"
-            className={this.props.classes.deleteIcon}
-          />
+          <ListItemText primary="Delete Account" />
         </MenuItem>
       </Menu>
     );

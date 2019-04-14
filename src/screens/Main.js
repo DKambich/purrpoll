@@ -7,27 +7,38 @@ import {
   Avatar,
   IconButton,
   withStyles,
-  Tooltip
+  Tooltip,
+  Tabs,
+  Tab
 } from "@material-ui/core";
-import { CloudUpload } from "@material-ui/icons";
 // React Router Imports
 import { LANDING, PROFILE } from "../constants/routes";
 
-const styles = {
+import CatIcon from "../components/CatIcon";
+
+const styles = theme => ({
   grow: {
     flexGrow: 1
   },
+  logo: {
+    marginRight: theme.spacing.unit,
+    [theme.breakpoints.down("sm")]: {
+      fontSize: 32
+    },
+    [theme.breakpoints.up("sm")]: {
+      fontSize: 40
+    }
+  },
   avatar: {
-    height: 24,
-    width: 24
+    // height: 24,
+    // width: 24
   }
-};
+});
 
 class Main extends Component {
   constructor(props) {
     super(props);
-    this.navigateToProfile = this.navigateToProfile.bind(this);
-    
+
     // If the user does not come from another page...
     if (!props.location.state) {
       // Navigate to the landing page
@@ -35,8 +46,12 @@ class Main extends Component {
     }
 
     this.state = {
-      user: props.location.state.user
+      user: props.location.state.user,
+      selectedTab: 0
     };
+
+    this.navigateToProfile = this.navigateToProfile.bind(this);
+    this.setTab = this.setTab.bind(this);
   }
 
   render() {
@@ -46,22 +61,30 @@ class Main extends Component {
       <Fragment>
         <AppBar position="static" color="primary">
           <Toolbar>
+            <CatIcon className={classes.logo} />
             <Typography variant="h6" color="inherit" className={classes.grow}>
               purrpoll
             </Typography>
 
-            <Tooltip title="Upload Cat" aria-label="Upload Cat">
-              <IconButton color="inherit">
-                <CloudUpload />
-              </IconButton>
-            </Tooltip>
-
             <Tooltip title="Profile" aria-label="Profile">
-              <IconButton color="inherit" onClick={this.navigateToProfile}>
-                <Avatar className={classes.avatar} src={user.photoURL} />
-              </IconButton>
+              <Avatar
+                className={classes.avatar}
+                src={user.photoURL}
+                onClick={this.navigateToProfile}
+              />
             </Tooltip>
           </Toolbar>
+          <Tabs
+            value={this.state.selectedTab}
+            onChange={this.setTab}
+            variant="fullWidth"
+            indicatorColor="secondary"
+            textColor="inherit"
+          >
+            <Tab label="POLLS" />
+            <Tab label="TRENDING" />
+            {/* <Tab label="NEARBY" /> */}
+          </Tabs>
         </AppBar>
       </Fragment>
     );
@@ -72,6 +95,10 @@ class Main extends Component {
       pathname: PROFILE,
       state: { user: this.state.user }
     });
+  }
+
+  setTab(event, value) {
+    this.setState({ selectedTab: value });
   }
 }
 

@@ -2,14 +2,13 @@ import React, { Component, Fragment } from "react";
 // Material UI Imports
 import {
   AppBar,
-  Toolbar,
-  Typography,
   Avatar,
-  IconButton,
-  withStyles,
-  Tooltip,
+  Tab,
   Tabs,
-  Tab
+  Toolbar,
+  Tooltip,
+  Typography,
+  withStyles
 } from "@material-ui/core";
 // React Router Imports
 import { LANDING, PROFILE } from "../constants/routes";
@@ -28,10 +27,6 @@ const styles = theme => ({
     [theme.breakpoints.up("sm")]: {
       fontSize: 40
     }
-  },
-  avatar: {
-    // height: 24,
-    // width: 24
   }
 });
 
@@ -66,12 +61,8 @@ class Main extends Component {
               purrpoll
             </Typography>
 
-            <Tooltip title="Profile" aria-label="Profile">
-              <Avatar
-                className={classes.avatar}
-                src={user.photoURL}
-                onClick={this.navigateToProfile}
-              />
+            <Tooltip title="Profile">
+              <Avatar src={user.photoURL} onClick={this.navigateToProfile} />
             </Tooltip>
           </Toolbar>
           <Tabs
@@ -83,7 +74,6 @@ class Main extends Component {
           >
             <Tab label="POLLS" />
             <Tab label="TRENDING" />
-            {/* <Tab label="NEARBY" /> */}
           </Tabs>
         </AppBar>
       </Fragment>

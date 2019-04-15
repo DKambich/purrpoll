@@ -9,10 +9,12 @@ import {
   Tooltip,
   Typography,
   withStyles,
-  Grid
+  Grid,
+  withTheme
 } from "@material-ui/core";
 // React Router Imports
 import { LANDING, PROFILE } from "../constants/routes";
+import CatLoading from "../components/CatLoading";
 
 import CatIcon from "../components/CatIcon";
 
@@ -20,7 +22,11 @@ import SwipeableViews from "react-swipeable-views";
 
 const styles = theme => {
   return {
-    root: {},
+    root: {
+      display: "flex",
+      flexDirection: "column",
+      minHeight: "100vh"
+    },
     grow: {
       flexGrow: 1
     },
@@ -71,11 +77,11 @@ class Main extends Component {
   }
 
   render() {
-    const { classes } = this.props;
+    const { classes, theme } = this.props;
     const { user } = this.state;
     return (
       <div className={classes.root}>
-        <AppBar position="static" color="primary">
+        <AppBar position="static" color="primary" style={{ flex: 0 }}>
           <Toolbar>
             <CatIcon className={classes.logo} />
             <Typography variant="h6" color="inherit" className={classes.grow}>
@@ -99,27 +105,34 @@ class Main extends Component {
         </AppBar>
         <SwipeableViews
           enableMouseEvents
+          style={{ flex: 1 }}
           onChangeIndex={this.handleChangeIndex}
           index={this.state.selectedTab}
         >
           <div
             style={{
-              padding: 15,
-              minHeight: "88vh",
-              color: "#fff",
-              backgroundColor: "#FEA900"
+              minHeight: "100%"
             }}
           >
-            slide n°1
+            <Grid
+              container
+              justify="center"
+              alignItems="center"
+              direction="column"
+            >
+              <div style={{ marginTop: theme.spacing.unit * 4 }}>
+                <CatLoading />
+              </div>
+            </Grid>
           </div>
           <div
             style={{
-              padding: 15,
-              minHeight: 100,
-              color: "#fff",
-              backgroundColor: "#B3DC4A"
+              minHeight: "100%"
             }}
           >
+            <Typography variant="h1">
+              HERE IS A LOT OF DANK TEXT LMAO
+            </Typography>
             slide n°2
           </div>
         </SwipeableViews>
@@ -143,4 +156,4 @@ class Main extends Component {
   }
 }
 
-export default withStyles(styles)(Main);
+export default withStyles(styles, { withTheme: true })(Main);

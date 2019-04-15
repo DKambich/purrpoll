@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from "react";
+import React, { Component } from "react";
 // Material UI Imports
 import {
   AppBar,
@@ -15,19 +15,12 @@ import {
 import { LANDING, PROFILE } from "../constants/routes";
 
 import CatIcon from "../components/CatIcon";
-import CatLoading from "../components/CatLoading";
 
 import SwipeableViews from "react-swipeable-views";
 
 const styles = theme => {
-  console.log(theme);
   return {
-    root: {
-      display: "flex",
-      flexDirection: "column",
-      height: "100vh",
-      width: "100vw"
-    },
+    root: {},
     grow: {
       flexGrow: 1
     },
@@ -39,6 +32,20 @@ const styles = theme => {
       [theme.breakpoints.up("sm")]: {
         fontSize: 40
       }
+    },
+    slide: {
+      padding: 15,
+      minHeight: 100,
+      color: "#fff"
+    },
+    slide1: {
+      backgroundColor: "#FEA900"
+    },
+    slide2: {
+      backgroundColor: "#B3DC4A"
+    },
+    slide3: {
+      backgroundColor: "#6AC0FF"
     }
   };
 };
@@ -68,7 +75,7 @@ class Main extends Component {
     const { user } = this.state;
     return (
       <div className={classes.root}>
-        <AppBar position="static" color="primary" style={{ flex: 0 }}>
+        <AppBar position="static" color="primary">
           <Toolbar>
             <CatIcon className={classes.logo} />
             <Typography variant="h6" color="inherit" className={classes.grow}>
@@ -90,16 +97,32 @@ class Main extends Component {
             <Tab label="TRENDING" />
           </Tabs>
         </AppBar>
-        <Grid
-          container
-          justify="center"
-          alignItems="center"
-          style={{ flex: 1 }}
+        <SwipeableViews
+          enableMouseEvents
+          onChangeIndex={this.handleChangeIndex}
+          index={this.state.selectedTab}
         >
-          <CatLoading />
-
-          <CatLoading />
-        </Grid>
+          <div
+            style={{
+              padding: 15,
+              minHeight: "88vh",
+              color: "#fff",
+              backgroundColor: "#FEA900"
+            }}
+          >
+            slide n°1
+          </div>
+          <div
+            style={{
+              padding: 15,
+              minHeight: 100,
+              color: "#fff",
+              backgroundColor: "#B3DC4A"
+            }}
+          >
+            slide n°2
+          </div>
+        </SwipeableViews>
       </div>
     );
   }

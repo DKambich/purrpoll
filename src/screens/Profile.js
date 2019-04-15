@@ -14,7 +14,8 @@ import {
   Typography,
   withStyles,
   ListItemText,
-  ListItemIcon
+  ListItemIcon,
+  Tooltip
 } from "@material-ui/core";
 import {
   ArrowBackRounded,
@@ -74,9 +75,12 @@ class Profile extends Component {
       <Fragment>
         <AppBar position="static" color="primary">
           <Toolbar>
-            <IconButton color="inherit" onClick={history.goBack}>
-              <ArrowBackRounded />
-            </IconButton>
+            <Tooltip title="back">
+              <IconButton color="inherit" onClick={history.goBack}>
+                <ArrowBackRounded />
+              </IconButton>
+            </Tooltip>
+
             <Typography variant="h6" color="inherit" className={classes.grow}>
               {user.name}
             </Typography>

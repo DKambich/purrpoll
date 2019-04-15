@@ -15,6 +15,7 @@ import {
 // React Router Imports
 import { LANDING, PROFILE } from "../constants/routes";
 import CatLoading from "../components/CatLoading";
+import meow from "../assets/meow.mp3";
 
 import CatIcon from "../components/CatIcon";
 
@@ -71,6 +72,9 @@ class Main extends Component {
       selectedTab: 0
     };
 
+    this.url = "../assets/meow.mp3";
+    this.audio = new Audio(meow);
+
     this.navigateToProfile = this.navigateToProfile.bind(this);
     this.setTab = this.setTab.bind(this);
     this.handleChangeIndex = this.handleChangeIndex.bind(this);
@@ -83,7 +87,12 @@ class Main extends Component {
       <div className={classes.root}>
         <AppBar position="static" color="primary" style={{ flex: 0 }}>
           <Toolbar>
-            <CatIcon className={classes.logo} />
+            <CatIcon
+              className={classes.logo}
+              onClick={() => {
+                this.audio.play();
+              }}
+            />
             <Typography variant="h6" color="inherit" className={classes.grow}>
               purrpoll
             </Typography>

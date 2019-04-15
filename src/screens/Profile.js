@@ -21,15 +21,8 @@ import {
   DialogContentText,
   DialogActions,
   Button,
-  CardHeader,
-  Tab,
-  Tabs,
-  BottomNavigation,
-  BottomNavigationAction
+  CardHeader
 } from "@material-ui/core";
-import RestoreIcon from "@material-ui/icons/Restore";
-import FavoriteIcon from "@material-ui/icons/Favorite";
-import LocationOnIcon from "@material-ui/icons/LocationOn";
 
 import {
   ArrowBackRounded,
@@ -97,7 +90,7 @@ class Profile extends Component {
       <Fragment>
         <AppBar color="primary" position="fixed">
           <Toolbar>
-            <Tooltip title="back">
+            <Tooltip title="Go Back">
               <IconButton color="inherit" onClick={history.goBack}>
                 <ArrowBackRounded />
               </IconButton>
@@ -107,18 +100,14 @@ class Profile extends Component {
               {user.name}
             </Typography>
             <Avatar src={user.photoURL} className={classes.avatar} />
-            <IconButton color="inherit" onClick={this.openMenu}>
-              <MoreVert />
-            </IconButton>
+            <Tooltip title="More Options">
+              <IconButton color="inherit" onClick={this.openMenu}>
+                <MoreVert />
+              </IconButton>
+            </Tooltip>
             {this.renderMenu(menuAnchor, open, classes)}
             {this.renderDialog()}
           </Toolbar>
-          {/* Possible Navigation scheme */}
-          {/* <Tabs value={value} onChange={null} variant="fullWidth">
-            <Tab label="Your Votes" />
-            <Tab label="Your Favorites" />
-            <Tab label="Your Cats" />
-          </Tabs> */}
         </AppBar>
 
         <div style={{ paddingTop: 64 }} />

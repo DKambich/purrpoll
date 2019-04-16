@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { PureComponent } from "react";
 import {
   Card,
   CardContent,
@@ -23,7 +23,7 @@ const styles = theme => ({
   }
 });
 
-class CatCard extends Component {
+class CatCard extends PureComponent {
   render() {
     const { classes } = this.props;
     return (
@@ -31,7 +31,7 @@ class CatCard extends Component {
         <CardContent>
           <Typography variant="h6">{this.props.title}</Typography>
         </CardContent>
-        <CardMedia>
+        <CardMedia src={this.props.src}>
           <img
             className={classes.media}
             alt="CatPicture"
@@ -39,7 +39,7 @@ class CatCard extends Component {
           />
         </CardMedia>
         <Typography color="textSecondary" className={classes.rating}>
-          {`Total Votes: ${this.props.rating}`}
+          {`Total purrpoints: ${this.props.rating}`}
         </Typography>
       </Card>
     );

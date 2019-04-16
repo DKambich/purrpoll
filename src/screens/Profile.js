@@ -34,6 +34,7 @@ import fire from "../constants/config";
 // React Router Imports
 import { LANDING } from "../constants/routes";
 import CatCard from "../components/CatCard";
+import CatLoading from "../components/CatLoading";
 
 const styles = theme => {
   return {
@@ -49,11 +50,12 @@ const styles = theme => {
     },
     deleteIcon: {
       color: "darkred"
+    },
+    loadingIcon: {
+      marginTop: theme.spacing.unit * 4
     }
   };
 };
-
-const testArr = new Array(51).fill(0);
 
 class Profile extends Component {
   constructor(props) {
@@ -65,12 +67,16 @@ class Profile extends Component {
 
     this.state = {
       dialogOpen: false,
-      menuAnchor: null
+      loading: true,
+      menuAnchor: null,
+      userCats: []
     };
 
     // Function Binding
     this.signOut = this.signOut.bind(this);
     this.deleteAccount = this.deleteAccount.bind(this);
+
+    this.renderCatGrid = this.renderCatGrid.bind(this);
 
     this.renderMenu = this.renderMenu.bind(this);
     this.openMenu = this.openMenu.bind(this);
@@ -79,6 +85,12 @@ class Profile extends Component {
     this.renderDialog = this.renderDialog.bind(this);
     this.openDialog = this.openDialog.bind(this);
     this.closeDialog = this.closeDialog.bind(this);
+  }
+
+  componentDidMount() {
+    setTimeout(() => {
+      this.setState({ loading: false, userCats: new Array(50).fill(0) });
+    }, 2000);
   }
 
   render() {
@@ -117,22 +129,13 @@ class Profile extends Component {
 
         <div className={classes.headerPadding} />
 
-        <Grid container direction="column" justify="center" alignItems="center">
-          <Typography variant="h4">Your Voted Cats</Typography>
-        </Grid>
         <Grid container direction="row" justify="center" alignItems="center">
-          <CatCard
+          {/* <CatCard
             title="Kitty"
             src="https://cdn2.thecatapi.com/images/5vk.jpg"
             rating={1}
-          />
-          {testArr.map(() => (
-            <CatCard
-              title="Cat"
-              src="https://cdn2.thecatapi.com/images/eee.jpg"
-              rating={Math.floor(Math.random() * 100)}
-            />
-          ))}
+          /> */}
+          {this.renderCatGrid()}
         </Grid>
       </Fragment>
     );
@@ -234,6 +237,29 @@ class Profile extends Component {
 
   closeMenu() {
     this.setState({ menuAnchor: null });
+  }
+
+  renderCatGrid() {
+    if (this.state.loading) {
+      return (
+        <div className={this.props.classes.loadingIcon}>
+          <CatLoading />
+        </div>
+      );
+    } else if (this.state.userCats.length === 0) {
+      return <Typography>No cats found</Typography>
+    }
+    return (
+      <Fragment>
+        {this.state.userCats.map(() => (
+          <CatCard
+            title="Cat"
+            src="https://cdn2.thecatapi.com/images/eee.jpg"
+            rating={Math.floor(Math.random() * 100)}
+          />
+        ))}
+      </Fragment>
+    );
   }
 }
 

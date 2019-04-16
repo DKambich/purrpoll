@@ -122,7 +122,7 @@ class Profile extends Component {
                 <MoreVert />
               </IconButton>
             </Tooltip>
-            {this.renderMenu(menuAnchor, open, classes)}
+            {this.renderMenu()}
             {this.renderDialog()}
           </Toolbar>
         </AppBar>
@@ -194,11 +194,11 @@ class Profile extends Component {
     this.setState({ dialogOpen: false });
   }
 
-  renderMenu(element, open, classes) {
+  renderMenu() {
     return (
       <Menu
         id="long-menu"
-        anchorEl={element}
+        anchorEl={this.state.menuAnchor}
         getContentAnchorEl={null}
         anchorOrigin={{
           vertical: "bottom",
@@ -208,7 +208,7 @@ class Profile extends Component {
           vertical: "top",
           horizontal: "right"
         }}
-        open={open}
+        open={Boolean(this.state.menuAnchor)}
         onClose={this.closeMenu}
       >
         {/* Placeholder MenuItem so first real MenuItem is not highlighted */}
@@ -223,7 +223,7 @@ class Profile extends Component {
         {/* MenuItem to delete the user's account */}
         <MenuItem onClick={this.openDialog}>
           <ListItemIcon>
-            <DeleteForever className={classes.deleteIcon} />
+            <DeleteForever className={this.props.classes.deleteIcon} />
           </ListItemIcon>
           <ListItemText primary="Delete Account" />
         </MenuItem>
@@ -247,14 +247,14 @@ class Profile extends Component {
         </div>
       );
     } else if (this.state.userCats.length === 0) {
-      return <Typography>No cats found</Typography>
+      return <Typography>No cats found</Typography>;
     }
     return (
       <Fragment>
         {this.state.userCats.map(() => (
           <CatCard
             title="Cat"
-            src="https://cdn2.thecatapi.com/images/eee.jpg"
+            src="https://cdn2.thecatapi.com/images/5ek.jpg"
             rating={Math.floor(Math.random() * 100)}
           />
         ))}

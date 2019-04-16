@@ -1,11 +1,12 @@
-const functions = require('firebase-functions');
+const functions = require("firebase-functions");
 const fetch = require("node-fetch");
-const catNames = require('cat-names');
+const catNames = require("cat-names");
 
-const admin = require('firebase-admin');
+const admin = require("firebase-admin");
 admin.initializeApp(functions.config().firebase);
 
 var db = admin.firestore();
+const cors = require("cors")({ origin: true });
 
 // // Create and Deploy Your First Cloud Functions
 // // https://firebase.google.com/docs/functions/write-firebase-functions
@@ -14,24 +15,107 @@ var db = admin.firestore();
 //  response.send("Hello from Firebase!");
 // });
 
-exports.getCats = functions.https.onRequest(async (request, response) => {
-  for(var i = 0; i < 100; i++) {
-    var resp = await fetch('https://api.thecatapi.com/v1/images/search');
-    var cat = (await resp.json())[0];
-    var index = i + "";
-    console.log(cat);
-    await db.collection("Cats").doc(index).set({
-      "id": cat["id"],
-      "index": index,
-      "name": catNames.random(),
-      "width": cat["width"],
-      "height": cat["height"],
-      "image": cat["url"],
-      "totalVotes": 0,
-      "votedFor": 0,
-      "votedAgainst": 0,
-      "votedBy": []
-    });
+exports.getPairs = functions.https.onRequest(async (request, response) => {
+  let resp = await fetch(
+    "https://api.thecatapi.com/v1/images/search?limit=100"
+  );
+  let catArray = await resp.json();
+
+  let index = 0;
+  for (let i = 0; i < catArray.length; i += 2) {
+    let catA = catArray[i];
+    let catAJSON = {
+      id: catA["id"],
+      name: catNames.random(),
+      width: catA["width"],
+      height: catA["height"],
+      image: catA["url"],
+      totalVotes: 0
+    };
+    await db
+      .collection("Cats")
+      .doc(catA["id"])
+      .set(catAJSON);
+
+    let catB = catArray[i + 1];
+    let catBJSON = {
+      id: catB["id"],
+      name: catNames.random(),
+      width: catB["width"],
+      height: catB["height"],
+      image: catB["url"],
+      totalVotes: 0
+    };
+    await db
+      .collection("Cats")
+      .doc(catB["id"])
+      .set(catBJSON);
+
+    let pairJSON = {
+      catA: catAJSON,
+      catB: catBJSON,
+      totalVotes: 0,
+      votesForCatA: 0,
+      votesForCatB: 0,
+      index: index + ""
+    };
+    await db
+      .collection("Pairs")
+      .doc(index + "")
+      .set(pairJSON);
+
+    index++;
   }
-  response.send("success");
+  response.send({ status: "success" });
+});
+
+function shuffle(array) {
+  var m = array.length,
+    t,
+    i;
+
+  // While there remain elements to shuffle…
+  while (m) {
+    // Pick a remaining element…
+    i = Math.floor(Math.random() * m--);
+
+    // And swap it with the current element.
+    t = array[m];
+    array[m] = array[i];
+    array[i] = t;
+  }
+
+  return array;
+}
+
+exports.addUser = functions.https.onRequest(async (request, response) => {
+  cors(request, response, async () => {
+    let uid = request.body.uid;
+
+    if (uid == null) {
+      throw new Error("must pass uid in body of request");
+    } else {
+      let order = [];
+      for (let i = 0; i < 50; i++) {
+        order.push(i);
+      }
+      order = await shuffle(order);
+
+      let userJSON = {
+        uid: uid,
+        catsPicked: [],
+        order: order,
+        currentIndex: 0
+      };
+      db.collection("Users")
+        .doc(uid)
+        .set(userJSON)
+        .then(function() {
+          response.send({ status: "success" });
+        })
+        .catch(function(error) {
+          throw new Error(error);
+        });
+    }
+  });
 });

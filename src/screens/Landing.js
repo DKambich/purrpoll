@@ -8,21 +8,27 @@ class Landing extends Component {
   constructor(props) {
     super(props);
     this.redirectUser = this.redirectUser.bind(this);
+    this.getUserData = this.getUserData.bind(this);
+
     // Register authentication state change listener
     fire.auth().onAuthStateChanged(this.redirectUser);
   }
 
-  redirectUser(user) {
+  async redirectUser(user) {
     // If the user exists...
     if (user) {
-      // Get their profile data
+      // Get user data from firebase
+      let userData = await this.getUserData(user.uid);
+
+      // Set the profile data
       let profile = {
-        email: user.email,
         name: user.displayName,
         photoURL: user.photoURL,
-        uid: user.uid
+        ...userData
       };
-      // Navigate to the main page, passing on user data
+
+      console.log(profile);
+      // Navigate to the main page, passing the user data
       this.props.history.push({
         pathname: ROUTES.MAIN,
         state: { user: profile }
@@ -31,6 +37,42 @@ class Landing extends Component {
       // Otherwise, navigate to the sign in page
       this.props.history.push(ROUTES.SIGN_IN);
     }
+  }
+
+  async getUserData(uid) {
+    // etet the Firebase firestore database
+    let db = fire.firestore();
+    // Get the user from the database
+    let fireUser = await db.doc(`Users/${uid}`).get();
+    // If the user does not exist...
+    if (!fireUser.exists) {
+      try {
+        // Make a call to create the user
+        let res = await fetch(
+          "https://us-central1-purrpoll.cloudfunctions.net/addUser",
+          {
+            method: "post",
+            body: await JSON.stringify({ uid: uid }),
+            headers: {
+              "Content-Type": "application/json"
+            }
+          }
+        );
+        // Parse the response
+        res = await res.json();
+        // If the the user was created succesfully...
+        if (res.status === "success") {
+          // Get a reference to the created user
+          fireUser = await db.doc(`Users/${uid}`).get();
+        }
+      } catch (error) {
+        // Catch and print errors
+        console.error(error.code, error.message);
+        return null;
+      }
+    }
+    // Return the user
+    return fireUser.data();
   }
 
   render() {

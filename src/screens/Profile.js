@@ -90,12 +90,10 @@ class Profile extends Component {
   componentDidMount() {
     setTimeout(() => {
       this.setState({ loading: false, userCats: new Array(50).fill(0) });
-    }, 2000);
+    }, 100);
   }
 
   render() {
-    const { menuAnchor } = this.state;
-    const open = Boolean(menuAnchor);
     const { classes, history, location } = this.props;
     const { user } = location.state;
 

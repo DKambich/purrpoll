@@ -9,8 +9,7 @@ import {
   Tooltip,
   Typography,
   withStyles,
-  Grid,
-  withTheme
+  Grid
 } from "@material-ui/core";
 // React Router Imports
 import { LANDING, PROFILE } from "../constants/routes";

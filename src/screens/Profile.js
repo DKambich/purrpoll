@@ -3,31 +3,31 @@ import React, { Component, Fragment } from "react";
 import {
   AppBar,
   Avatar,
+  Button,
   Card,
+  CardMedia,
   CardContent,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
   Grid,
   IconButton,
+  ListItemIcon,
+  ListItemText,
   Menu,
   MenuItem,
   Toolbar,
-  Typography,
-  withStyles,
-  ListItemText,
-  ListItemIcon,
   Tooltip,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogContentText,
-  DialogActions,
-  Button,
-  CardHeader
+  Typography,
+  withStyles
 } from "@material-ui/core";
-
+// Material UI Icon Imports
 import {
   ArrowBackRounded,
-  ExitToApp,
   DeleteForever,
+  ExitToApp,
   MoreVert
 } from "@material-ui/icons";
 // Firebase Imports
@@ -39,9 +39,12 @@ import { LANDING } from "../constants/routes";
 
 const styles = theme => {
   return {
-    grow: {
+    headerGrow: {
       flexGrow: 1,
       marginLeft: theme.spacing.unit
+    },
+    headerPadding: {
+      paddingTop: 64
     },
     avatar: {
       marginRight: theme.spacing.unit
@@ -63,8 +66,8 @@ class Profile extends Component {
     }
 
     this.state = {
-      menuAnchor: null,
-      dialogOpen: false
+      dialogOpen: false,
+      menuAnchor: null
     };
 
     // Function Binding
@@ -81,11 +84,11 @@ class Profile extends Component {
   }
 
   render() {
-    const { classes, history, location, theme } = this.props;
-    const { user } = location.state;
     const { menuAnchor } = this.state;
     const open = Boolean(menuAnchor);
-    const value = 1;
+    const { classes, history, location, theme } = this.props;
+    const { user } = location.state;
+
     return (
       <Fragment>
         <AppBar color="primary" position="fixed">
@@ -96,7 +99,11 @@ class Profile extends Component {
               </IconButton>
             </Tooltip>
 
-            <Typography variant="h6" color="inherit" className={classes.grow}>
+            <Typography
+              variant="h6"
+              color="inherit"
+              className={classes.headerGrow}
+            >
               {user.name}
             </Typography>
             <Avatar src={user.photoURL} className={classes.avatar} />
@@ -110,44 +117,59 @@ class Profile extends Component {
           </Toolbar>
         </AppBar>
 
-        <div style={{ paddingTop: 64 }} />
+        <div className={classes.headerPadding} />
 
         <Grid container direction="column" justify="center" alignItems="center">
           <Typography variant="h4">Your Voted Cats</Typography>
         </Grid>
         <Grid container direction="row" justify="center" alignItems="center">
+          <Card
+            style={{
+              display: "inline-block",
+              width: 300,
+              margin: theme.spacing.unit * 3
+            }}
+          >
+            <CardContent>
+              <Typography>Cat Name</Typography>
+            </CardContent>
+            <CardMedia>
+              <img
+                alt="CatPicture"
+                src="https://cdn2.thecatapi.com/images/5vk.jpg"
+                style={{
+                  width: 300,
+                  height: 300,
+                  objectFit: "fill"
+                }}
+              />
+            </CardMedia>
+          </Card>
           {testArr.map((element, index) => (
             <Card
               style={{
                 display: "inline-block",
-                width: 250,
+                width: 300,
                 margin: theme.spacing.unit * 3
               }}
             >
-              <CardHeader title={"CAT NAME"} />
               <CardContent>
+                <Typography>Cat Name</Typography>
+              </CardContent>
+              <CardMedia>
                 <img
+                  alt="CatPicture"
                   src="https://cdn2.thecatapi.com/images/eee.jpg"
                   style={{
-                    maxWidth: "100%",
-                    maxHeight: "100%",
-                    verticalAlign: "middle"
+                    width: 300,
+                    height: 300,
+                    objectFit: "cover"
                   }}
                 />
-              </CardContent>
+              </CardMedia>
             </Card>
           ))}
         </Grid>
-        <div style={{ paddingBottom: 64 }} />
-
-        {/* Possible Navigation Scheme */}
-        {/* <BottomNavigation
-          style={{ width: "100%", position: "fixed", bottom: 0 }}
-        >
-          <BottomNavigationAction label="Recents" icon={<RestoreIcon />} />
-          <BottomNavigationAction label="Favorites" icon={<FavoriteIcon />} />
-          <BottomNavigationAction label="Nearby" icon={<LocationOnIcon />} />
-        </BottomNavigation> */}
       </Fragment>
     );
   }

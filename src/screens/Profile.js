@@ -4,9 +4,6 @@ import {
   AppBar,
   Avatar,
   Button,
-  Card,
-  CardMedia,
-  CardContent,
   Dialog,
   DialogActions,
   DialogContent,
@@ -36,6 +33,7 @@ import "firebase/auth";
 import fire from "../constants/config";
 // React Router Imports
 import { LANDING } from "../constants/routes";
+import CatCard from "../components/CatCard";
 
 const styles = theme => {
   return {
@@ -86,7 +84,7 @@ class Profile extends Component {
   render() {
     const { menuAnchor } = this.state;
     const open = Boolean(menuAnchor);
-    const { classes, history, location, theme } = this.props;
+    const { classes, history, location } = this.props;
     const { user } = location.state;
 
     return (
@@ -123,51 +121,17 @@ class Profile extends Component {
           <Typography variant="h4">Your Voted Cats</Typography>
         </Grid>
         <Grid container direction="row" justify="center" alignItems="center">
-          <Card
-            style={{
-              display: "inline-block",
-              width: 300,
-              margin: theme.spacing.unit * 3
-            }}
-          >
-            <CardContent>
-              <Typography>Cat Name</Typography>
-            </CardContent>
-            <CardMedia>
-              <img
-                alt="CatPicture"
-                src="https://cdn2.thecatapi.com/images/5vk.jpg"
-                style={{
-                  width: 300,
-                  height: 300,
-                  objectFit: "fill"
-                }}
-              />
-            </CardMedia>
-          </Card>
-          {testArr.map((element, index) => (
-            <Card
-              style={{
-                display: "inline-block",
-                width: 300,
-                margin: theme.spacing.unit * 3
-              }}
-            >
-              <CardContent>
-                <Typography>Cat Name</Typography>
-              </CardContent>
-              <CardMedia>
-                <img
-                  alt="CatPicture"
-                  src="https://cdn2.thecatapi.com/images/eee.jpg"
-                  style={{
-                    width: 300,
-                    height: 300,
-                    objectFit: "cover"
-                  }}
-                />
-              </CardMedia>
-            </Card>
+          <CatCard
+            title="Kitty"
+            src="https://cdn2.thecatapi.com/images/5vk.jpg"
+            rating={1}
+          />
+          {testArr.map(() => (
+            <CatCard
+              title="Cat"
+              src="https://cdn2.thecatapi.com/images/eee.jpg"
+              rating={Math.floor(Math.random() * 100)}
+            />
           ))}
         </Grid>
       </Fragment>

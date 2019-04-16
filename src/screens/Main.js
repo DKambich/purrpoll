@@ -38,20 +38,6 @@ const styles = theme => {
       [theme.breakpoints.up("sm")]: {
         fontSize: 40
       }
-    },
-    slide: {
-      padding: 15,
-      minHeight: 100,
-      color: "#fff"
-    },
-    slide1: {
-      backgroundColor: "#FEA900"
-    },
-    slide2: {
-      backgroundColor: "#B3DC4A"
-    },
-    slide3: {
-      backgroundColor: "#6AC0FF"
     }
   };
 };
@@ -71,10 +57,11 @@ class Main extends Component {
       selectedTab: 0
     };
 
-    this.url = "../assets/meow.mp3";
     this.audio = new Audio(meow);
+    this.playSecret = this.playSecret.bind(this);
 
     this.navigateToProfile = this.navigateToProfile.bind(this);
+
     this.setTab = this.setTab.bind(this);
     this.handleChangeIndex = this.handleChangeIndex.bind(this);
   }
@@ -84,14 +71,9 @@ class Main extends Component {
     const { user } = this.state;
     return (
       <div className={classes.root}>
-        <AppBar position="static" color="primary" style={{ flex: 0 }}>
+        <AppBar position="static" color="primary">
           <Toolbar>
-            <CatIcon
-              className={classes.logo}
-              onClick={() => {
-                this.audio.play();
-              }}
-            />
+            <CatIcon className={classes.logo} onClick={this.playSecret} />
             <Typography variant="h6" color="inherit" className={classes.grow}>
               purrpoll
             </Typography>
@@ -141,11 +123,14 @@ class Main extends Component {
             <Typography variant="h1">
               HERE IS A LOT OF DANK TEXT LMAO
             </Typography>
-            slide n°2
           </div>
         </SwipeableViews>
       </div>
     );
+  }
+
+  playSecret() {
+    this.audio.play();
   }
 
   navigateToProfile() {

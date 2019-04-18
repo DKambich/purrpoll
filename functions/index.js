@@ -16,6 +16,11 @@ const cors = require("cors")({ origin: true });
 // });
 
 exports.getPairs = functions.https.onRequest(async (request, response) => {
+  var numberRef = db.collection("Pairs").doc("number");
+  await numberRef.get().then(async function(doc) {
+    await numberRef.update({"num": ++(doc.data().num)});
+  });
+
   let resp = await fetch(
     "https://api.thecatapi.com/v1/images/search?limit=100"
   );
@@ -104,6 +109,7 @@ exports.addUser = functions.https.onRequest(async (request, response) => {
       let userJSON = {
         uid: uid,
         catsPicked: [],
+        num: 0,
         order: order,
         currentIndex: 0
       };
@@ -116,6 +122,57 @@ exports.addUser = functions.https.onRequest(async (request, response) => {
         .catch(function(error) {
           throw new Error(error);
         });
+    }
+  });
+});
+
+exports.getNextCats = functions.https.onRequest(async (request, response) => {
+  cors(request, response, async () => {
+    let uid = request.body.uid;
+
+    if (uid == null) {
+      throw new Error("must pass uid in body of request");
+    }
+    else {
+      let num;
+      let currentIndex;
+      await db.collection("Users").doc(uid).get().then(function(doc) {
+        num = doc.data().num;
+        currentIndex = doc.data().currentIndex;
+      });
+      let currNum;
+      await db.collection("Pairs").doc("number").get().then(function(doc) {
+        currNum = doc.data().num;
+      });
+
+      if (currentIndex >= 50 && num == currNum) {
+        response.send({
+          "status":"no more cats"
+        });
+      }
+      else {
+        if (num != currNum) {
+          num = currNum;
+          currentIndex = 0;
+        }
+
+        let pairID;
+        await db.collection("Users").doc(uid).get().then(function(doc) {
+          let order = doc.data().order;
+          pairID = order[currentIndex];
+        });
+
+        await db.collection("Users").doc(uid).update({
+          "num":num,
+          "currentIndex":++currentIndex
+        });
+
+        let pairJSON = (await db.collection("Pairs").doc(pairID+"").get()).data();
+        response.send({
+          "status":"success",
+          "Pair":pairJSON
+        });
+      }
     }
   });
 });

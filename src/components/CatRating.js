@@ -28,7 +28,8 @@ const styles = theme => {
       height: 300,
       width: 300,
       objectFit: "cover"
-    }
+    },
+    voteText: { marginBottom: theme.spacing.unit * 2 }
   };
 };
 
@@ -89,7 +90,11 @@ class CatRating extends Component {
 
         <Paper className={classes.votingCard}>
           <Grid container direction="column">
-            <Typography variant="h4" align="center">
+            <Typography
+              variant="h4"
+              align="center"
+              className={classes.voteText}
+            >
               Choose your favorite!
             </Typography>
             <Grid container justify="space-evenly">

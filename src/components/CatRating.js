@@ -21,11 +21,12 @@ const styles = theme => {
       marginTop: theme.spacing.unit * 8
     },
     votingCard: {
-      padding: theme.spacing.unit * 4
+      padding: theme.spacing.unit * 4,
+      margin: theme.spacing.unit * 2
     },
     media: {
-      width: 300,
       height: 300,
+      width: 300,
       objectFit: "cover"
     }
   };
@@ -71,7 +72,7 @@ class CatRating extends Component {
       <Grid
         container
         direction="row"
-        justify="space-around"
+        justify="center"
         alignItems="center"
         className={classes.mainCard}
       >
@@ -79,13 +80,11 @@ class CatRating extends Component {
           <CardContent>
             <Typography variant="h6">catA</Typography>
           </CardContent>
-          <CardMedia src="https://cdn2.thecatapi.com/images/5vk.jpg">
-            <img
-              className={classes.media}
-              alt="CatPicture"
-              src="https://cdn2.thecatapi.com/images/5vk.jpg"
-            />
-          </CardMedia>
+          <CardMedia
+            className={classes.media}
+            image="https://cdn2.thecatapi.com/images/5ek.jpg"
+            title="CAT A"
+          />
         </Card>
 
         <Paper className={classes.votingCard}>
@@ -106,13 +105,11 @@ class CatRating extends Component {
           <CardContent>
             <Typography variant="h6">catB</Typography>
           </CardContent>
-          <CardMedia src="https://cdn2.thecatapi.com/images/5vk.jpg">
-            <img
-              className={classes.media}
-              alt="CatPicture"
-              src="https://cdn2.thecatapi.com/images/5vk.jpg"
-            />
-          </CardMedia>
+          <CardMedia
+            className={classes.media}
+            image="https://cdn2.thecatapi.com/images/5vk.jpg"
+            title="CAT B"
+          />
         </Card>
       </Grid>
     );

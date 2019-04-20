@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, Fragment } from "react";
 
 import {
   withStyles,
@@ -29,7 +29,8 @@ const styles = theme => {
       width: 300,
       objectFit: "cover"
     },
-    voteText: { marginBottom: theme.spacing.unit * 2 }
+    voteText: { marginBottom: theme.spacing.unit * 2 },
+    voteButton: { margin: theme.spacing.unit }
   };
 };
 
@@ -37,20 +38,18 @@ class CatRating extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      empty: false,
       loading: true,
-      mounted: true
+      mounted: true,
+      pair: null,
+      stats: null,
+      user: props.user,
+      voted: false
     };
-  }
 
-  componentDidMount() {
-    this.setState({ mounted: true });
-    setTimeout(() => {
-      this.setState({ loading: false });
-    }, 1000);
-  }
-
-  componentWillUnmount() {
-    this.setState({ mounted: false });
+    this.voteForCat = this.voteForCat.bind(this);
+    this.getPair = this.getPair.bind(this);
+    this.renderStats = this.renderStats.bind(this);
   }
 
   render() {
@@ -69,6 +68,8 @@ class CatRating extends Component {
       );
     }
 
+    const { catA, catB, votesForCatA, votesForCatB } = this.state.pair;
+
     return (
       <Grid
         container
@@ -79,12 +80,12 @@ class CatRating extends Component {
       >
         <Card>
           <CardContent>
-            <Typography variant="h6">catA</Typography>
+            <Typography variant="h6">{catA.name}</Typography>
           </CardContent>
           <CardMedia
             className={classes.media}
-            image="https://cdn2.thecatapi.com/images/5ek.jpg"
-            title="CAT A"
+            image={catA.image}
+            title={catA.name}
           />
         </Card>
 
@@ -98,26 +99,104 @@ class CatRating extends Component {
               Choose your favorite!
             </Typography>
             <Grid container justify="space-evenly">
-              <Button variant="contained">Vote for Cat A</Button>
-              <Button variant="contained" disabled>
-                Vote for Cat B
+              <Button
+                variant="contained"
+                className={classes.voteButton}
+                disabled={this.state.voted}
+                onClick={() => {
+                  this.voteForCat(catA, votesForCatA);
+                }}
+              >
+                {catA.name}
+              </Button>
+              <Button
+                variant="contained"
+                className={classes.voteButton}
+                disabled={this.state.voted}
+                onClick={() => {
+                  this.voteForCat(catB, votesForCatB);
+                }}
+              >
+                {catB.name}
               </Button>
             </Grid>
+            {this.renderStats()}
           </Grid>
         </Paper>
 
         <Card>
           <CardContent>
-            <Typography variant="h6">catB</Typography>
+            <Typography variant="h6">{catB.name}</Typography>
           </CardContent>
           <CardMedia
             className={classes.media}
-            image="https://cdn2.thecatapi.com/images/5vk.jpg"
-            title="CAT B"
+            image={catB.image}
+            title={catB.name}
           />
         </Card>
       </Grid>
     );
+  }
+
+  renderStats() {
+    if (!this.state.voted) return null;
+    let { stats } = this.state;
+    let response;
+    if (stats.totalVotes === 0) {
+      response = `You're the first person to vote for ${stats.cat.name}`;
+    } else {
+      let percent = stats.votes / stats.totalVotes;
+      response = `You and ${percent}% of people voted for ${stats.cat.name}`;
+    }
+    return (
+      <Fragment>
+        <Typography variant="body1" align="center">
+          {response}
+        </Typography>
+        <Button variant="contained">Next Pair</Button>
+      </Fragment>
+    );
+  }
+
+  async voteForCat(cat, catVotes) {
+    if (this.state.mounted)
+      this.setState({
+        voted: true,
+        stats: {
+          cat: cat,
+          totalVotes: this.state.pair.totalVotes,
+          votes: catVotes
+        }
+      });
+  }
+
+  async getPair() {
+    if (this.state.mounted) this.setState({ loading: true });
+    let res = await fetch(
+      "https://us-central1-purrpoll.cloudfunctions.net/getNextCats",
+      {
+        method: "post",
+        body: await JSON.stringify({ uid: this.state.user.uid }),
+        headers: {
+          "Content-Type": "application/json"
+        }
+      }
+    );
+    res = await res.json();
+    if (res.status === "success") {
+      if (this.state.mounted) this.setState({ loading: false, pair: res.Pair });
+    } else if (res.status === "empty") {
+      if (this.state.mounted) this.setState({ empty: true });
+    }
+  }
+
+  componentDidMount() {
+    this.setState({ mounted: true });
+    this.getPair();
+  }
+
+  componentWillUnmount() {
+    this.setState({ mounted: false });
   }
 }
 

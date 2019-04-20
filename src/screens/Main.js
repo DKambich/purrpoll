@@ -60,8 +60,9 @@ class Main extends Component {
   }
 
   render() {
-    const { classes } = this.props;
-    const { user } = this.state;
+    const { classes } = this.props,
+      { user } = this.state;
+
     return (
       <Fragment>
         <AppBar position="static" color="primary">
@@ -75,6 +76,7 @@ class Main extends Component {
               <Avatar src={user.photoURL} onClick={this.navigateToProfile} />
             </Tooltip>
           </Toolbar>
+
           <Tabs
             value={this.state.selectedTab}
             onChange={this.setTab}
@@ -86,7 +88,10 @@ class Main extends Component {
             <Tab label="TRENDING" />
           </Tabs>
         </AppBar>
-        {this.state.selectedTab === 0 && <CatRating />}
+
+        {this.state.selectedTab === 0 && (
+          <CatRating user={this.props.history.location.state.user} />
+        )}
         {this.state.selectedTab === 1 && <CatLoading />}
       </Fragment>
     );

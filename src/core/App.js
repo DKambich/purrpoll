@@ -36,12 +36,9 @@ const styles = theme => ({
 class App extends Component {
   render() {
     return (
-      <MuiThemeProvider
-        theme={theme}
-        classes={this.props.classes.invisibleScrollbar}
-      >
+      <MuiThemeProvider theme={theme}>
         <CssBaseline />
-        <Router>
+        <Router classes={this.props.classes.invisibleScrollbar}>
           <Route path={ROUTES.LANDING} exact component={Landing} />
           <Route path={ROUTES.SIGN_IN} component={Authentication} />
           <Route path={ROUTES.MAIN} component={Main} />

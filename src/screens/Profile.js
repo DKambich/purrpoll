@@ -128,11 +128,6 @@ class Profile extends Component {
         <div className={classes.headerPadding} />
 
         <Grid container direction="row" justify="center" alignItems="center">
-          {/* <CatCard
-            title="Kitty"
-            src="https://cdn2.thecatapi.com/images/5vk.jpg"
-            rating={1}
-          /> */}
           {this.renderCatGrid()}
         </Grid>
       </Fragment>

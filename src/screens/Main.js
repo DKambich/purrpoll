@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, Fragment } from "react";
 // Material UI Imports
 import {
   AppBar,
@@ -8,8 +8,7 @@ import {
   Toolbar,
   Tooltip,
   Typography,
-  withStyles,
-  Grid
+  withStyles
 } from "@material-ui/core";
 // React Router Imports
 import { LANDING, PROFILE } from "../constants/routes";
@@ -18,15 +17,10 @@ import meow from "../assets/meow.mp3";
 
 import CatIcon from "../components/CatIcon";
 
-import SwipeableViews from "react-swipeable-views";
+import CatRating from "../components/CatRating";
 
 const styles = theme => {
   return {
-    root: {
-      display: "flex",
-      flexDirection: "column",
-      minHeight: "100vh"
-    },
     grow: {
       flexGrow: 1
     },
@@ -63,14 +57,13 @@ class Main extends Component {
     this.navigateToProfile = this.navigateToProfile.bind(this);
 
     this.setTab = this.setTab.bind(this);
-    this.handleChangeIndex = this.handleChangeIndex.bind(this);
   }
 
   render() {
-    const { classes, theme } = this.props;
+    const { classes } = this.props;
     const { user } = this.state;
     return (
-      <div className={classes.root}>
+      <Fragment>
         <AppBar position="static" color="primary">
           <Toolbar>
             <CatIcon className={classes.logo} onClick={this.playSecret} />
@@ -93,39 +86,9 @@ class Main extends Component {
             <Tab label="TRENDING" />
           </Tabs>
         </AppBar>
-        <SwipeableViews
-          enableMouseEvents
-          style={{ flex: 1 }}
-          onChangeIndex={this.handleChangeIndex}
-          index={this.state.selectedTab}
-        >
-          <div
-            style={{
-              minHeight: "100%"
-            }}
-          >
-            <Grid
-              container
-              justify="center"
-              alignItems="center"
-              direction="column"
-            >
-              <div style={{ marginTop: theme.spacing.unit * 4 }}>
-                <CatLoading />
-              </div>
-            </Grid>
-          </div>
-          <div
-            style={{
-              minHeight: "100%"
-            }}
-          >
-            <Typography variant="h1">
-              HERE IS A LOT OF DANK TEXT LMAO
-            </Typography>
-          </div>
-        </SwipeableViews>
-      </div>
+        {this.state.selectedTab === 0 && <CatRating />}
+        {this.state.selectedTab === 1 && <CatLoading />}
+      </Fragment>
     );
   }
 
@@ -141,11 +104,7 @@ class Main extends Component {
   }
 
   setTab(event, value) {
-    this.handleChangeIndex(value);
-  }
-
-  handleChangeIndex(index) {
-    this.setState({ selectedTab: index });
+    this.setState({ selectedTab: value });
   }
 }
 

@@ -31,13 +31,11 @@ class CatCard extends PureComponent {
         <CardContent>
           <Typography variant="h6">{this.props.title}</Typography>
         </CardContent>
-        <CardMedia src={this.props.src}>
-          <img
-            className={classes.media}
-            alt="CatPicture"
-            src={this.props.src}
-          />
-        </CardMedia>
+        <CardMedia
+          className={classes.media}
+          image={this.props.src}
+          title={this.props.title}
+        />
         <Typography color="textSecondary" className={classes.rating}>
           {`Total purrpoints: ${this.props.rating}`}
         </Typography>

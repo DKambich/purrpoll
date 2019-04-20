@@ -104,7 +104,7 @@ class CatRating extends Component {
                 className={classes.voteButton}
                 disabled={this.state.voted}
                 onClick={() => {
-                  this.voteForCat(catA, votesForCatA);
+                  this.voteForCat(catA, votesForCatA, "catA");
                 }}
               >
                 {catA.name}
@@ -114,7 +114,7 @@ class CatRating extends Component {
                 className={classes.voteButton}
                 disabled={this.state.voted}
                 onClick={() => {
-                  this.voteForCat(catB, votesForCatB);
+                  this.voteForCat(catB, votesForCatB, "catB");
                 }}
               >
                 {catB.name}
@@ -153,12 +153,25 @@ class CatRating extends Component {
         <Typography variant="body1" align="center">
           {response}
         </Typography>
-        <Button variant="contained">Next Pair</Button>
+        <Button variant="contained" onClick={this.getPair}>
+          Next Pair
+        </Button>
       </Fragment>
     );
   }
 
-  async voteForCat(cat, catVotes) {
+  async voteForCat(cat, catVotes, catStr) {
+    await fetch("https://us-central1-purrpoll.cloudfunctions.net/rateCat", {
+      method: "post",
+      body: await JSON.stringify({
+        uid: this.state.user.uid,
+        pairIndex: this.state.pair.index,
+        catPicked: catStr
+      }),
+      headers: {
+        "Content-Type": "application/json"
+      }
+    });
     if (this.state.mounted)
       this.setState({
         voted: true,

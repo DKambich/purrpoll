@@ -18,7 +18,7 @@ const cors = require("cors")({ origin: true });
 exports.getPairs = functions.https.onRequest(async (request, response) => {
   var numberRef = db.collection("Pairs").doc("number");
   await numberRef.get().then(async function(doc) {
-    await numberRef.update({"num": ++(doc.data().num)});
+    await numberRef.update({ num: ++doc.data().num });
   });
 
   let resp = await fetch(
@@ -146,44 +146,60 @@ exports.getNextCats = functions.https.onRequest(async (request, response) => {
 
     if (uid == null) {
       throw new Error("must pass uid in body of request");
-    }
-    else {
+    } else {
       let num;
       let currentIndex;
-      await db.collection("Users").doc(uid).get().then(function(doc) {
-        num = doc.data().num;
-        currentIndex = doc.data().currentIndex;
-      });
+      await db
+        .collection("Users")
+        .doc(uid)
+        .get()
+        .then(function(doc) {
+          num = doc.data().num;
+          currentIndex = doc.data().currentIndex;
+        });
       let currNum;
-      await db.collection("Pairs").doc("number").get().then(function(doc) {
-        currNum = doc.data().num;
-      });
+      await db
+        .collection("Pairs")
+        .doc("number")
+        .get()
+        .then(function(doc) {
+          currNum = doc.data().num;
+        });
 
       if (currentIndex >= 50 && num == currNum) {
         response.send({
-          "status":"empty"
+          status: "empty"
         });
-      }
-      else {
+      } else {
         if (num != currNum) {
           num = currNum;
           currentIndex = 0;
         }
 
         let pairID;
-        await db.collection("Users").doc(uid).get().then(function(doc) {
-          let order = doc.data().order;
-          pairID = order[currentIndex];
-        });
+        await db
+          .collection("Users")
+          .doc(uid)
+          .get()
+          .then(function(doc) {
+            let order = doc.data().order;
+            pairID = order[currentIndex];
+          });
 
-        await db.collection("Users").doc(uid).update({
-          "num":num
-        });
+        await db
+          .collection("Users")
+          .doc(uid)
+          .update({
+            num: num
+          });
 
-        let pairJSON = (await db.collection("Pairs").doc(pairID+"").get()).data();
+        let pairJSON = (await db
+          .collection("Pairs")
+          .doc(pairID + "")
+          .get()).data();
         response.send({
-          "status":"success",
-          "Pair":pairJSON
+          status: "success",
+          Pair: pairJSON
         });
       }
     }
@@ -191,67 +207,98 @@ exports.getNextCats = functions.https.onRequest(async (request, response) => {
 });
 
 exports.rateCat = functions.https.onRequest(async (request, response) => {
-  let pairIndex = request.body.pairIndex;
-  let catPicked = request.body.catPicked;
-  let uid = request.body.uid;
+  cors(request, response, async () => {
+    let pairIndex = request.body.pairIndex;
+    let catPicked = request.body.catPicked;
+    let uid = request.body.uid;
 
-  if (pairIndex == null || catPicked == null || uid == null) {
-    throw new Error("must pass pairIndex and catPicked and uid in body of request");
-  }
-  else {
-    var num;
-    await db.collection("Users").doc(uid).get().then(function(doc) {
-      num = doc.data().num;
-    });
-    var currNum;
-    await db.collection("Pairs").doc("number").get().then(function(doc) {
-      currNum = doc.data().num;
-    })
+    if (pairIndex == null || catPicked == null || uid == null) {
+      throw new Error(
+        "must pass pairIndex and catPicked and uid in body of request"
+      );
+    } else {
+      var num;
+      await db
+        .collection("Users")
+        .doc(uid)
+        .get()
+        .then(function(doc) {
+          num = doc.data().num;
+        });
+      var currNum;
+      await db
+        .collection("Pairs")
+        .doc("number")
+        .get()
+        .then(function(doc) {
+          currNum = doc.data().num;
+        });
 
-    if (num != currNum) {
-      throw new Error("that pair is out of date");
+      if (num != currNum) {
+        throw new Error("that pair is out of date");
+      }
+
+      var pairJSON;
+      await db
+        .collection("Pairs")
+        .doc(pairIndex)
+        .get()
+        .then(function(doc) {
+          pairJSON = doc.data();
+        });
+
+      if (catPicked == "catA") {
+        await db
+          .collection("Pairs")
+          .doc(pairIndex)
+          .update({
+            totalVotes: ++pairJSON.totalVotes,
+            votesForCatA: ++pairJSON.votesForCatA
+          });
+
+        let catID = pairJSON["catA"]["id"];
+        await db
+          .collection("Cats")
+          .doc(catID)
+          .update({
+            totalVotes: admin.firestore.FieldValue.increment(1)
+          });
+
+        await db
+          .collection("Users")
+          .doc(uid)
+          .update({
+            catsPicked: admin.firestore.FieldValue.arrayUnion(catID)
+          });
+      } else if (catPicked == "catB") {
+        await db
+          .collection("Pairs")
+          .doc(pairIndex)
+          .update({
+            totalVotes: ++pairJSON.totalVotes,
+            votesForCatB: ++pairJSON.votesForCatB
+          });
+
+        let catID = pairJSON["catB"]["id"];
+        await db
+          .collection("Cats")
+          .doc(catID)
+          .update({
+            totalVotes: admin.firestore.FieldValue.increment(1)
+          });
+
+        await db
+          .collection("Users")
+          .doc(uid)
+          .update({
+            catsPicked: admin.firestore.FieldValue.arrayUnion(catID)
+          });
+      } else {
+        throw new Error("must pick either catA or catB");
+      }
+      response.send({
+        status: "success"
+      });
     }
-
-    var pairJSON;
-    await db.collection("Pairs").doc(pairIndex).get().then(function(doc) {
-      pairJSON = doc.data();
-    });
-
-    if (catPicked == "catA") {
-      await db.collection("Pairs").doc(pairIndex).update({
-        "totalVotes":++(pairJSON.totalVotes),
-        "votesForCatA":++(pairJSON.votesForCatA)
-      });
-
-      let catID = pairJSON["catA"]["id"];
-      await db.collection("Cats").doc(catID).update({
-        "totalVotes":admin.firestore.FieldValue.increment(1)
-      });
-
-      await db.collection("Users").doc(uid).update({
-        "catsPicked":admin.firestore.FieldValue.arrayUnion(catID)
-      });
-    }
-    else if (catPicked == "catB") {
-      await db.collection("Pairs").doc(pairIndex).update({
-        "totalVotes":++(pairJSON.totalVotes),
-        "votesForCatB":++(pairJSON.votesForCatB)
-      });
-
-      let catID = pairJSON["catB"]["id"];
-      await db.collection("Cats").doc(catID).update({
-        "totalVotes":admin.firestore.FieldValue.increment(1)
-      });
-
-      await db.collection("Users").doc(uid).update({
-        "catsPicked":admin.firestore.FieldValue.arrayUnion(catID)
-      });
-    }
-    else {
-      throw new Error("must pick either catA or catB");
-    }
-    response.send({
-      "status":"success"
-    });
-  }
+  });
 });

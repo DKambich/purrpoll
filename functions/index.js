@@ -163,8 +163,7 @@ exports.getNextCats = functions.https.onRequest(async (request, response) => {
         });
 
         await db.collection("Users").doc(uid).update({
-          "num":num,
-          "currentIndex":++currentIndex
+          "num":num
         });
 
         let pairJSON = (await db.collection("Pairs").doc(pairID+"").get()).data();

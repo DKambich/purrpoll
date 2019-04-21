@@ -268,7 +268,8 @@ exports.rateCat = functions.https.onRequest(async (request, response) => {
           .collection("Users")
           .doc(uid)
           .update({
-            catsPicked: admin.firestore.FieldValue.arrayUnion(catID)
+            catsPicked: admin.firestore.FieldValue.arrayUnion(catID),
+            currentIndex: admin.firestore.FieldValue.increment(1)
           });
       } else if (catPicked == "catB") {
         await db
@@ -291,7 +292,8 @@ exports.rateCat = functions.https.onRequest(async (request, response) => {
           .collection("Users")
           .doc(uid)
           .update({
-            catsPicked: admin.firestore.FieldValue.arrayUnion(catID)
+            catsPicked: admin.firestore.FieldValue.arrayUnion(catID),
+            currentIndex: admin.firestore.FieldValue.increment(1)
           });
       } else {
         throw new Error("must pick either catA or catB");

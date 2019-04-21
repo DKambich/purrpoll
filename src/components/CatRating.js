@@ -1,14 +1,14 @@
 import React, { Component, Fragment } from "react";
 
 import {
-  withStyles,
+  Button,
   Grid,
   Card,
   CardContent,
-  Typography,
   CardMedia,
   Paper,
-  Button
+  Typography,
+  withStyles
 } from "@material-ui/core";
 import CatLoading from "./CatLoading";
 
@@ -145,7 +145,7 @@ class CatRating extends Component {
     if (stats.totalVotes === 0) {
       response = `You're the first person to vote for ${stats.cat.name}`;
     } else {
-      let percent = stats.votes / stats.totalVotes;
+      let percent = (stats.votes / stats.totalVotes) * 100;
       response = `You and ${percent}% of people voted for ${stats.cat.name}`;
     }
     return (
@@ -184,7 +184,7 @@ class CatRating extends Component {
   }
 
   async getPair() {
-    if (this.state.mounted) this.setState({ loading: true });
+    if (this.state.mounted) this.setState({ loading: true, voted: false });
     let res = await fetch(
       "https://us-central1-purrpoll.cloudfunctions.net/getNextCats",
       {

@@ -142,7 +142,7 @@ class CatRating extends Component {
     if (!this.state.voted) return null;
     let { stats } = this.state;
     let response;
-    if (stats.totalVotes === 0) {
+    if (stats.votes === 0) {
       response = `You're the first person to vote for ${stats.cat.name}`;
     } else {
       let percent = (stats.votes / stats.totalVotes) * 100;

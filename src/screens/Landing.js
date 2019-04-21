@@ -27,7 +27,6 @@ class Landing extends Component {
         ...userData
       };
 
-      console.log(profile);
       // Navigate to the main page, passing the user data
       this.props.history.push({
         pathname: ROUTES.MAIN,

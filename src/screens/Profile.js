@@ -69,12 +69,15 @@ class Profile extends Component {
       dialogOpen: false,
       loading: true,
       menuAnchor: null,
+      mounted: false,
+      user: props.location.state.user,
       userCats: []
     };
 
     // Function Binding
     this.signOut = this.signOut.bind(this);
     this.deleteAccount = this.deleteAccount.bind(this);
+    this.getVotedCats = this.getVotedCats.bind(this);
 
     this.renderCatGrid = this.renderCatGrid.bind(this);
 
@@ -85,12 +88,6 @@ class Profile extends Component {
     this.renderDialog = this.renderDialog.bind(this);
     this.openDialog = this.openDialog.bind(this);
     this.closeDialog = this.closeDialog.bind(this);
-  }
-
-  componentDidMount() {
-    setTimeout(() => {
-      this.setState({ loading: false, userCats: new Array(50).fill(0) });
-    }, 100);
   }
 
   render() {
@@ -155,6 +152,23 @@ class Profile extends Component {
     }
   }
 
+  async getVotedCats() {
+    let res = await fetch(
+      "https://us-central1-purrpoll.cloudfunctions.net/getUserRatedCats",
+      {
+        method: "post",
+        body: await JSON.stringify({ uid: this.state.user.uid }),
+        headers: {
+          "Content-Type": "application/json"
+        }
+      }
+    );
+    res = await res.json();
+    if (res.status === "success" && this.state.mounted)
+      this.setState({ loading: false, userCats: res.catsPicked });
+    console.log(res);
+  }
+
   renderDialog() {
     return (
       <Dialog open={this.state.dialogOpen} onClose={this.closeDialog}>
@@ -180,11 +194,11 @@ class Profile extends Component {
 
   openDialog() {
     this.closeMenu();
-    this.setState({ dialogOpen: true });
+    if (this.state.mounted) this.setState({ dialogOpen: true });
   }
 
   closeDialog() {
-    this.setState({ dialogOpen: false });
+    if (this.state.mounted) this.setState({ dialogOpen: false });
   }
 
   renderMenu() {
@@ -225,11 +239,11 @@ class Profile extends Component {
   }
 
   openMenu(event) {
-    this.setState({ menuAnchor: event.currentTarget });
+    if (this.state.mounted) this.setState({ menuAnchor: event.currentTarget });
   }
 
   closeMenu() {
-    this.setState({ menuAnchor: null });
+    if (this.state.mounted) this.setState({ menuAnchor: null });
   }
 
   renderCatGrid() {
@@ -244,15 +258,20 @@ class Profile extends Component {
     }
     return (
       <Fragment>
-        {this.state.userCats.map(() => (
-          <CatCard
-            title="Cat"
-            src="https://cdn2.thecatapi.com/images/5ek.jpg"
-            rating={Math.floor(Math.random() * 100)}
-          />
+        {this.state.userCats.map(({ id, name, image, totalVotes }) => (
+          <CatCard key={id} title={name} src={image} rating={totalVotes} />
         ))}
       </Fragment>
     );
+  }
+
+  componentDidMount() {
+    this.setState({ mounted: true });
+    this.getVotedCats();
+  }
+
+  componentWillUnmount() {
+    this.setState({ mounted: false });
   }
 }
 

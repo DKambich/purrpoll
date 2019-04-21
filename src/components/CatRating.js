@@ -66,6 +66,19 @@ class CatRating extends Component {
           <CatLoading />
         </Grid>
       );
+    } else if (this.state.empty) {
+      return (
+        <Grid
+          container
+          justify="center"
+          alignItems="center"
+          className={classes.loadingIcon}
+        >
+          <Typography variant="body1">
+            No more cats to rate, check back tomorrow for more!
+          </Typography>
+        </Grid>
+      );
     }
 
     const { catA, catB, votesForCatA, votesForCatB } = this.state.pair;
@@ -197,9 +210,10 @@ class CatRating extends Component {
     );
     res = await res.json();
     if (res.status === "success") {
-      if (this.state.mounted) this.setState({ loading: false, pair: res.Pair });
+      if (this.state.mounted)
+        this.setState({ loading: false, pair: res.Pair, empty: false });
     } else if (res.status === "empty") {
-      if (this.state.mounted) this.setState({ empty: true });
+      if (this.state.mounted) this.setState({ loading: false, empty: true });
     }
   }
 

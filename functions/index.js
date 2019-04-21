@@ -304,3 +304,31 @@ exports.rateCat = functions.https.onRequest(async (request, response) => {
     }
   });
 });
+
+exports.getUserRatedCats = functions.https.onRequest(async (request, response) => {
+  cors(request, response, async () => {
+    let uid = request.body.uid;
+
+    if (uid == null) {
+      throw new Error("must pass uid in body of request");
+    }
+    else {
+      let catsArr = [];
+      let catsPicked;
+      await db.collection("Users").doc(uid).get().then(function(doc) {
+        catsPicked = doc.data().catsPicked;
+      });
+
+      for(let i = 0; i < catsPicked.length; i++) {
+        await db.collection("Cats").doc(catsPicked[i]).get().then(function(doc) {
+          catsArr.push(doc.data());
+        });
+      }
+
+      response.send({
+        "status":"success",
+        "catsPicked":catsArr
+      })
+    }
+  });
+});

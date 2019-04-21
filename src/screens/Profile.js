@@ -166,7 +166,6 @@ class Profile extends Component {
     res = await res.json();
     if (res.status === "success" && this.state.mounted)
       this.setState({ loading: false, userCats: res.catsPicked });
-    console.log(res);
   }
 
   renderDialog() {
@@ -254,7 +253,13 @@ class Profile extends Component {
         </div>
       );
     } else if (this.state.userCats.length === 0) {
-      return <Typography>No cats found</Typography>;
+      return (
+        <div className={this.props.classes.loadingIcon}>
+          <Typography variant="body1">
+            You haven't rated any cats yet!
+          </Typography>
+        </div>
+      );
     }
     return (
       <Fragment>

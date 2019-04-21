@@ -2,10 +2,10 @@ import React, { Component, Fragment } from "react";
 
 import {
   Button,
-  Grid,
   Card,
   CardContent,
   CardMedia,
+  Grid,
   Paper,
   Typography,
   withStyles
@@ -41,7 +41,7 @@ class CatRating extends Component {
       empty: false,
       loading: true,
       mounted: true,
-      pair: null,
+      cats: [],
       stats: null,
       user: props.user,
       voted: false
@@ -66,10 +66,23 @@ class CatRating extends Component {
           <CatLoading />
         </Grid>
       );
+    } else if (this.state.empty) {
+      return (
+        <Grid
+          container
+          justify="center"
+          alignItems="center"
+          className={classes.loadingIcon}
+        >
+          <Typography variant="body1">
+            No more cats to rate, check back tomorrow for more!
+          </Typography>
+        </Grid>
+      );
     }
 
-    const { catA, catB, votesForCatA, votesForCatB } = this.state.pair;
-
+    let catA = this.state.cats[0],
+      catB = this.state.cats[1];
     return (
       <Grid
         container
@@ -104,7 +117,7 @@ class CatRating extends Component {
                 className={classes.voteButton}
                 disabled={this.state.voted}
                 onClick={() => {
-                  this.voteForCat(catA, votesForCatA, "catA");
+                  this.voteForCat(0);
                 }}
               >
                 {catA.name}
@@ -114,7 +127,7 @@ class CatRating extends Component {
                 className={classes.voteButton}
                 disabled={this.state.voted}
                 onClick={() => {
-                  this.voteForCat(catB, votesForCatB, "catB");
+                  this.voteForCat(1);
                 }}
               >
                 {catB.name}
@@ -143,10 +156,10 @@ class CatRating extends Component {
     let { stats } = this.state;
     let response;
     if (stats.votes === 0) {
-      response = `You're the first person to vote for ${stats.cat.name}`;
+      response = `You're the first person to vote for ${stats.name}`;
     } else {
       let percent = (stats.votes / stats.totalVotes) * 100;
-      response = `You and ${percent}% of people voted for ${stats.cat.name}`;
+      response = `You and ${percent}% of people voted for ${stats.name}`;
     }
     return (
       <Fragment>
@@ -160,25 +173,28 @@ class CatRating extends Component {
     );
   }
 
-  async voteForCat(cat, catVotes, catStr) {
+  async voteForCat(index) {
+    let cat = this.state.cats[index];
+    console.log(cat);
     await fetch("https://us-central1-purrpoll.cloudfunctions.net/rateCat", {
       method: "post",
       body: await JSON.stringify({
         uid: this.state.user.uid,
-        pairIndex: this.state.pair.index,
-        catPicked: catStr
+        pairIndex: cat.index,
+        catPicked: cat.string
       }),
       headers: {
         "Content-Type": "application/json"
       }
     });
+
     if (this.state.mounted)
       this.setState({
         voted: true,
         stats: {
-          cat: cat,
-          totalVotes: this.state.pair.totalVotes,
-          votes: catVotes
+          name: cat.name,
+          totalVotes: cat.totalVotes,
+          votes: cat.votes
         }
       });
   }
@@ -197,9 +213,31 @@ class CatRating extends Component {
     );
     res = await res.json();
     if (res.status === "success") {
-      if (this.state.mounted) this.setState({ loading: false, pair: res.Pair });
+      let pair = res.Pair;
+      let cats = [
+        {
+          ...pair.catA,
+          index: pair.index,
+          votes: pair.votesForCatA,
+          totalVotes: pair.totalVotes,
+          string: "catA"
+        },
+        {
+          ...pair.catB,
+          index: pair.index,
+          votes: pair.votesForCatB,
+          totalVotes: pair.totalVotes,
+          string: "catB"
+        }
+      ];
+      if (this.state.mounted)
+        this.setState({
+          loading: false,
+          cats: cats,
+          empty: false
+        });
     } else if (res.status === "empty") {
-      if (this.state.mounted) this.setState({ empty: true });
+      if (this.state.mounted) this.setState({ loading: false, empty: true });
     }
   }
 

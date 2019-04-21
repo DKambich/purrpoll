@@ -332,3 +332,19 @@ exports.getUserRatedCats = functions.https.onRequest(async (request, response) =
     }
   });
 });
+
+exports.getTopRatedCats = functions.https.onRequest(async (request, response) => {
+  cors(request, response, async () => {
+    let catsArr = [];
+    await db.collection("Cats").orderBy("totalVotes", "desc").limit(50).get().then(async function(querySnapshot) {
+      await querySnapshot.forEach(async function(doc) {
+        console.log(doc.data());
+        await catsArr.push(doc.data());
+      });
+    });
+    response.send({
+      "status":"success",
+      "topCats":catsArr
+    });
+  });
+});

@@ -12,11 +12,11 @@ import {
 } from "@material-ui/core";
 // React Router Imports
 import { LANDING, PROFILE } from "../constants/routes";
+
+// Local Imports
 import meow from "../assets/meow.mp3";
-
 import CatIcon from "../components/CatIcon";
-
-import CatRating from "../components/CatRating";
+import PollingCats from "../components/PollingCats";
 import PopularCats from "../components/PopularCats";
 
 const styles = theme => {
@@ -85,12 +85,12 @@ class Main extends Component {
             textColor="inherit"
           >
             <Tab label="POLLS" />
-            <Tab label="TRENDING" />
+            <Tab label="POPULAR" />
           </Tabs>
         </AppBar>
 
         {this.state.selectedTab === 0 && (
-          <CatRating user={this.props.history.location.state.user} />
+          <PollingCats user={this.props.history.location.state.user} />
         )}
         {this.state.selectedTab === 1 && <PopularCats />}
       </Fragment>

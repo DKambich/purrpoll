@@ -35,7 +35,7 @@ const styles = theme => {
   };
 };
 
-class CatRating extends Component {
+class PollingCats extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -176,6 +176,15 @@ class CatRating extends Component {
 
   async voteForCat(index) {
     let cat = this.state.cats[index];
+    if (this.state.mounted)
+      this.setState({
+        voted: true,
+        stats: {
+          name: cat.name,
+          totalVotes: cat.totalVotes,
+          votes: cat.votes
+        }
+      });
     await fetch("https://us-central1-purrpoll.cloudfunctions.net/rateCat", {
       method: "post",
       body: await JSON.stringify({
@@ -187,16 +196,6 @@ class CatRating extends Component {
         "Content-Type": "application/json"
       }
     });
-
-    if (this.state.mounted)
-      this.setState({
-        voted: true,
-        stats: {
-          name: cat.name,
-          totalVotes: cat.totalVotes,
-          votes: cat.votes
-        }
-      });
   }
 
   async getPair() {
@@ -251,4 +250,4 @@ class CatRating extends Component {
   }
 }
 
-export default withStyles(styles)(CatRating);
+export default withStyles(styles)(PollingCats);

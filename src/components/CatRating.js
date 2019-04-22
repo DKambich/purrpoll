@@ -175,7 +175,6 @@ class CatRating extends Component {
 
   async voteForCat(index) {
     let cat = this.state.cats[index];
-    console.log(cat);
     await fetch("https://us-central1-purrpoll.cloudfunctions.net/rateCat", {
       method: "post",
       body: await JSON.stringify({

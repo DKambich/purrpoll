@@ -28,44 +28,55 @@ exports.getPairs = functions.https.onRequest(async (request, response) => {
 
   let index = 0;
   for (let i = 0; i < catArray.length; i += 2) {
+
     let catA = catArray[i];
-    let catAJSON = {
-      id: catA["id"],
-      name: catNames.random(),
-      width: catA["width"],
-      height: catA["height"],
-      image: catA["url"],
-      totalVotes: 0
-    };
-    await db
-      .collection("Cats")
-      .doc(catA["id"])
-      .set(catAJSON);
+    let catAName = catNames.random();
+    await db.collection("Cats").doc(catA["id"]).get().then(async function(doc) {
+      if (!doc.exists) {
+        let catAJSON = {
+          id: catA["id"],
+          name: catAName,
+          width: catA["width"],
+          height: catA["height"],
+          image: catA["url"],
+          totalVotes: 0
+        };
+        await db
+          .collection("Cats")
+          .doc(catA["id"])
+          .set(catAJSON);
+      }
+    });
 
     let catB = catArray[i + 1];
-    let catBJSON = {
-      id: catB["id"],
-      name: catNames.random(),
-      width: catB["width"],
-      height: catB["height"],
-      image: catB["url"],
-      totalVotes: 0
-    };
-    await db
-      .collection("Cats")
-      .doc(catB["id"])
-      .set(catBJSON);
+    let catBName = catNames.random();
+    await db.collection("Cats").doc(catB["id"]).get().then(async function(doc) {
+      if (!doc.exists) {
+        let catBJSON = {
+          id: catB["id"],
+          name: catBName,
+          width: catB["width"],
+          height: catB["height"],
+          image: catB["url"],
+          totalVotes: 0
+        };
+        await db
+          .collection("Cats")
+          .doc(catB["id"])
+          .set(catBJSON);
+      }
+    });
 
     catAJSON = {
       id: catA["id"],
-      name: catNames.random(),
+      name: catAName,
       width: catA["width"],
       height: catA["height"],
       image: catA["url"]
     };
     catBJSON = {
       id: catB["id"],
-      name: catNames.random(),
+      name: catBName,
       width: catB["width"],
       height: catB["height"],
       image: catB["url"]
@@ -174,6 +185,14 @@ exports.getNextCats = functions.https.onRequest(async (request, response) => {
         if (num != currNum) {
           num = currNum;
           currentIndex = 0;
+
+          await db
+            .collection("Users")
+            .doc(uid)
+            .update({
+              num: num,
+              currentIndex: currentIndex
+            });
         }
 
         let pairID;
@@ -184,13 +203,6 @@ exports.getNextCats = functions.https.onRequest(async (request, response) => {
           .then(function(doc) {
             let order = doc.data().order;
             pairID = order[currentIndex];
-          });
-
-        await db
-          .collection("Users")
-          .doc(uid)
-          .update({
-            num: num
           });
 
         let pairJSON = (await db

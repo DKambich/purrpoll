@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from "react";
-
+// Material UI Imports
 import {
   Button,
   Card,
@@ -10,6 +10,7 @@ import {
   Typography,
   withStyles
 } from "@material-ui/core";
+// Local Imports
 import CatLoading from "./CatLoading";
 
 const styles = theme => {

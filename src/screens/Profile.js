@@ -133,26 +133,35 @@ class Profile extends Component {
 
   signOut() {
     this.closeMenu();
+    // Sign the user out
     fire.auth().signOut();
+    // Navigate to the landing page
     this.props.history.push(LANDING);
   }
 
   async deleteAccount() {
     this.closeDialog();
+    // Get the current user
     let user = fire.auth().currentUser;
     try {
+      // Attempt to delete the user
       await user.delete();
+      // If successful navigate to the landing page
       this.props.history.push(LANDING);
     } catch (error) {
       console.error(error.code, error.message);
+      // Reauthetnicate if needed
       let provider = new firebase.auth.GoogleAuthProvider();
       await user.reauthenticateWithPopup(provider);
+      // Delete the user once reauthenticated
       await user.delete();
+      // If successful navigate to the landing page
       this.props.history.push(LANDING);
     }
   }
 
   async getVotedCats() {
+    // Make a call to fetch the user's rated cats
     let res = await fetch(
       "https://us-central1-purrpoll.cloudfunctions.net/getUserRatedCats",
       {
@@ -163,7 +172,11 @@ class Profile extends Component {
         }
       }
     );
+
+    // Parse the response into JSON
     res = await res.json();
+
+    // If the fetch was successful, update the state of the page
     if (res.status === "success" && this.state.mounted)
       this.setState({ loading: false, userCats: res.catsPicked });
   }
@@ -246,13 +259,17 @@ class Profile extends Component {
   }
 
   renderCatGrid() {
+    // If the state is loading, display a loading icon
     if (this.state.loading) {
       return (
         <div className={this.props.classes.loadingIcon}>
           <CatLoading />
         </div>
       );
-    } else if (this.state.userCats.length === 0) {
+    }
+
+    // If the user has not voted for any cats, display a message stating such
+    if (this.state.userCats.length === 0) {
       return (
         <div className={this.props.classes.loadingIcon}>
           <Typography variant="body1">
@@ -261,6 +278,8 @@ class Profile extends Component {
         </div>
       );
     }
+
+    // If there are cats the user has voted, display theme
     return (
       <Fragment>
         {this.state.userCats.map(({ id, name, image, totalVotes }) => (

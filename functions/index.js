@@ -366,3 +366,27 @@ exports.getTopRatedCats = functions.https.onRequest(async (request, response) =>
     });
   });
 });
+
+exports.deleteUser = functions.https.onRequest((request, response) => {
+  cors(request, response, () => {
+    let uid = request.body.uid;
+
+    if (uid == null) {
+      throw new Error("must pass uid in body of request");
+    }
+    else {
+      db.collection("Users").doc(uid).get().then(function() {
+        if (doc.exists) {
+          db.collection("Users").doc(uid).delete().then(function() {
+            response.send({
+              "status":"success"
+            });
+          });
+        }
+        else {
+          throw new Error("user does not exist");
+        }
+      });
+    }
+  });
+});

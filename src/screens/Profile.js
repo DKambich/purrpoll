@@ -15,13 +15,10 @@ import {
   ListItemText,
   Menu,
   MenuItem,
-  Select,
   Toolbar,
   Tooltip,
   Typography,
-  withStyles,
-  FormControl,
-  InputLabel
+  withStyles
 } from "@material-ui/core";
 // Material UI Icon Imports
 import {

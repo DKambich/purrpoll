@@ -35,7 +35,7 @@ const styles = theme => {
   };
 };
 
-class CatRating extends Component {
+class PollingCats extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -187,7 +187,6 @@ class CatRating extends Component {
         "Content-Type": "application/json"
       }
     });
-
     if (this.state.mounted)
       this.setState({
         voted: true,
@@ -251,4 +250,4 @@ class CatRating extends Component {
   }
 }
 
-export default withStyles(styles)(CatRating);
+export default withStyles(styles)(PollingCats);

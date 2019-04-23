@@ -176,15 +176,6 @@ class PollingCats extends Component {
 
   async voteForCat(index) {
     let cat = this.state.cats[index];
-    if (this.state.mounted)
-      this.setState({
-        voted: true,
-        stats: {
-          name: cat.name,
-          totalVotes: cat.totalVotes,
-          votes: cat.votes
-        }
-      });
     await fetch("https://us-central1-purrpoll.cloudfunctions.net/rateCat", {
       method: "post",
       body: await JSON.stringify({
@@ -196,6 +187,15 @@ class PollingCats extends Component {
         "Content-Type": "application/json"
       }
     });
+    if (this.state.mounted)
+      this.setState({
+        voted: true,
+        stats: {
+          name: cat.name,
+          totalVotes: cat.totalVotes,
+          votes: cat.votes
+        }
+      });
   }
 
   async getPair() {

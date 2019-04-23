@@ -375,7 +375,7 @@ exports.deleteUser = functions.https.onRequest((request, response) => {
       throw new Error("must pass uid in body of request");
     }
     else {
-      db.collection("Users").doc(uid).get().then(function() {
+      db.collection("Users").doc(uid).get().then(function(doc) {
         if (doc.exists) {
           db.collection("Users").doc(uid).delete().then(function() {
             response.send({

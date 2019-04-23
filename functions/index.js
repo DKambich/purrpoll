@@ -46,6 +46,9 @@ exports.getPairs = functions.https.onRequest(async (request, response) => {
           .doc(catA["id"])
           .set(catAJSON);
       }
+      else {
+        catAName = doc.data().name;
+      }
     });
 
     let catB = catArray[i + 1];
@@ -64,6 +67,9 @@ exports.getPairs = functions.https.onRequest(async (request, response) => {
           .collection("Cats")
           .doc(catB["id"])
           .set(catBJSON);
+      }
+      else {
+        catBName = doc.data().name;
       }
     });
 

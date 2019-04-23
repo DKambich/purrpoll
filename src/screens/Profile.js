@@ -147,7 +147,7 @@ class Profile extends Component {
     try {
       // Attempt to delete the user
       await user.delete();
-      await this.deleteFromDatabase();
+      // await this.deleteFromDatabase();
       // If successful navigate to the landing page
       this.props.history.push(LANDING);
     } catch (error) {
@@ -158,7 +158,7 @@ class Profile extends Component {
       // Delete the user once reauthenticated
       try {
         await user.delete();
-        await this.deleteFromDatabase();
+        // await this.deleteFromDatabase();
       } catch (error) {
         console.error(error.code, error.message);
         // TODO: Show snackbar

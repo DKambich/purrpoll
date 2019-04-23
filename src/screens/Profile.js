@@ -78,6 +78,7 @@ class Profile extends Component {
     this.signOut = this.signOut.bind(this);
     this.deleteAccount = this.deleteAccount.bind(this);
     this.getVotedCats = this.getVotedCats.bind(this);
+    this.deleteFromDatabase = this.deleteFromDatabase(this);
 
     this.renderCatGrid = this.renderCatGrid.bind(this);
 
@@ -146,6 +147,7 @@ class Profile extends Component {
     try {
       // Attempt to delete the user
       await user.delete();
+      await this.deleteFromDatabase();
       // If successful navigate to the landing page
       this.props.history.push(LANDING);
     } catch (error) {
@@ -154,10 +156,30 @@ class Profile extends Component {
       let provider = new firebase.auth.GoogleAuthProvider();
       await user.reauthenticateWithPopup(provider);
       // Delete the user once reauthenticated
-      await user.delete();
+      try {
+        await user.delete();
+        await this.deleteFromDatabase();
+      } catch (error) {
+        console.error(error.code, error.message);
+        // TODO: Show snackbar
+      }
+
       // If successful navigate to the landing page
       this.props.history.push(LANDING);
     }
+  }
+
+  async deleteFromDatabase() {
+    let res = await fetch(
+      "https://us-central1-purrpoll.cloudfunctions.net/deleteUser",
+      {
+        method: "post",
+        body: await JSON.stringify({ uid: this.state.user.uid }),
+        headers: {
+          "Content-Type": "application/json"
+        }
+      }
+    );
   }
 
   async getVotedCats() {
